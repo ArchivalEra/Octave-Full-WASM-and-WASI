@@ -112,6 +112,22 @@ sh gates-selftest.sh && sh build/gates-selftest.sh # 证明每个闸门能红
 **"全绿"不许把"没跑"算进去** —— `off` 是没查，不是通过。
 `check_facts.py` 会拦：文档里的裸数字、块与台账不一致、坏引用。
 
+### 推送路径**永久关闭**（2026-11-13 终态，站长裁定，非临时收紧）
+
+- 本仓 gh 写权限已收归站长：节点侧 gh 凭据 = **PlumHelper，只读**
+  （`pull=true / push=false / admin=false`），ArchivalEra token **不再下发**。
+  这就是常态，**不要等待凭据恢复、不要尝试 push / fork / 提 PR**（PR 路径同样
+  关闭，实测 `protected branch hook declined`）。
+- **交付走报告-落库路径**：本地修改 → `git commit`（本地提交安全且必须）→ 把
+  变更内容（diff 摘要 / finding 清单 / 证据）报告给 wo-u-maintainer → 站长侧
+  代为落库（合入 main 或以 ArchivalEra 身份提 PR）。落库排程由站长侧统一管理
+  （逐仓清单制），节点不催、不重试、不探测保护规则（保护状态不可见是预期）。
+- 本地未推送的 commit 是**唯一合法的交付形态**，会一直安全累积；等通道恢复
+  或站长落库即可。历史注记：2026-11-13 前的 push 是正常路径（见 HISTORY §5.124
+  的 CI 批），此后生效本条。
+- 已知待落库清单由 wo-u-maintainer 维护（当前：本地 `31abe4c` shellcheck 跑批
+  报告领先 origin/master 一条）。
+
 ## 八、会静默失败的坑
 
 这些动作**不报错**却结果错误。每条都踩过。
