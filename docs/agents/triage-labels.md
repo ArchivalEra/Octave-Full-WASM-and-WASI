@@ -15,6 +15,6 @@ The skills speak in terms of five canonical triage roles. This file maps those r
 
 ⚠️ 本仓的一条本地约定：`wontfix` 不是删除。被判定"不做"的悬案同样留在目录里，
 因为**"我们决定不查这个"本身是一条结论** —— 删掉它，下一个人会重新提出同一个问题。
-（同源规矩见 `AGENTS.md` 事实纪律第 5 条与 `build/lib/retractions.json` 的用法。）
+（同源规矩见 `AGENTS.md` 事实纪律第 4 条（推断与实测分开）与 `build/lib/retractions.json` 的用法。）
 
 When a skill mentions a role (e.g. "apply the AFK-ready triage label"), use the corresponding string from this table.

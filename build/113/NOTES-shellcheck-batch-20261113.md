@@ -9,10 +9,13 @@
   （抽样核过：`ensure_shim` 等函数在别的分支动态调用）；剔除后 **192 条**
   = error 3 / warning 67 / note 122
 
-## error 级（3 条，全部定性为**有意为之**，非 bug）
-- `build/check-site-parity.sh:128` + `build/promote-w64-lane.sh:311,326`
-  （SC2066 "双引号导致循环只跑一次"）：**单元素循环是设计** —— 注释明写
-  「w64-base 已死档（2026-10-19），清单只剩一份/不再发运」，留档名作未来扩展点。
+## error 级（3 条，全部定性为**有意为之**，非 bug，逐条证据）
+- `build/check-site-parity.sh:128`（SC2066）：单元素循环，设计注释在其上一行
+  —— `check-site-parity.sh:127`「清单只有 manifest.w64.json 这一份…只认已存在的那份」。
+- `build/promote-w64-lane.sh:311`（SC2066）：单元素循环，设计注释同行 ——
+  `# w64-base 已死档（2026-10-19）——不再发运`。
+- `build/promote-w64-lane.sh:326`（SC2066）：同上形状，`:325` say 行 +
+  `:302` 注释（`w64-base 已死档：不再取台账键`）佐证。
   三处均带注释，行为自证覆盖（promote-w64-lane `--selftest`、check-site-parity
   `--selftest` 全绿）。
 
