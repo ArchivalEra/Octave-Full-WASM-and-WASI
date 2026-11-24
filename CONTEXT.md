@@ -109,7 +109,7 @@ wasm 里的 C 经 `EM_JS` 同步调 `pyodide.runPython` 即可 ⇒ 数据通道 
 
 ### 口径
 "唯一权威的构建旗标组合"。**它已经不是文档，而是代码**：`relink.sh` 的模式表推出全部
-环境变量（条数见 `build/FACTS.json` 的 `env_vars`；★ 曾写 22 是**错的** —— A1 加了 `BUILD_MODE`
+环境变量（条数见 `FACTS.json` 的 `env_vars`；★ 曾写 22 是**错的** —— A1 加了 `BUILD_MODE`
 标签变量；另有 `P5_OBJS` 是脚本内数组不算），一个都不许手设（漏一个会**静默退化**，而构建/链接/自检全绿）。
 **证据：** `build/113/relink.sh`
 
@@ -173,7 +173,7 @@ master 线必须 COI+多线程，无 COI 唯一线 = wasm32，HISTORY §5.109）
 **证据：** `build/113/link-web.sh`
 
 ### 身份证里的 v128
-现役产物的 SIMD 判据：反汇编里 `v128` 指令的条数 = `build/FACTS.json` 的 `wasm_v128`
+现役产物的 SIMD 判据：反汇编里 `v128` 指令的条数 = `FACTS.json` 的 `wasm_v128`
 （非 SIMD 那版 = 0）。
 ⚠️ 别用 `grep simd128`（那是**假**判据，产物里没有 target_features 段）。
 **证据：** `build/113/write-build-manifest.py`
@@ -230,14 +230,13 @@ JSPI 的"挂起"= wasm 栈整体让出，页面定时器照常跑（验收判据
 ## 流程与文档
 
 ### 活状态 / 历史
-`STATE.md` = 活状态（那里的断言必须与产物一致，否则 pre-commit 直接拦）；
+`STATE.md` = 活状态（由 `zreflect/facts.py --render-doc` 从 `FACTS.json` 渲染，提交时由 `reflect-local/hook.py` 刷新并用 `zreflect/check_facts.py` 对账）；
 `HISTORY.md` = 历史（append-only，里面的数字是"当时如此"，检查器不查）。
-**证据：** `.githooks/check-state.py`
+**证据：** `zreflect/check_facts.py`
 
 ### AUTO:STATE
-`STATE.md` 文末由 `.githooks/update-state.py` **机器维护**的区块（部署件 sha/体积、
-最近一次全绿回归、交付包、包内 wasm 与部署件同 sha）。**别手写、别手改**。
-**证据：** `.githooks/update-state.py`
+`STATE.md` 顶部引言之外的机器块（`AUTO:FACTS`、`AUTO:GATES`）由 `zreflect/facts.py --render-doc` 从 `FACTS.json` 与 `zreflect/registry.py` 渲染。**别手写、别手改**。
+**证据：** `zreflect/facts.py`
 
 ### 白名单（仓库策略）
 `.gitignore` 是**白名单**：默认拒绝一切（`*`），逐项放行（`!路径`）。新增文件必须同步放行，
@@ -300,16 +299,12 @@ TARGET_FEATURES 子节（wasm64 模块声明特性名 `wasm64`）——**不看�
 站点闸门 R10（条 ↔ 站点档一致）、客户端 `install()`（不符 ⇒ 响亮拒绝 `cause='arch-mismatch'`）。
 **证据：** `build/113/oct-arch.py`、`test/browser/accept-arch-boundary.mjs`
 
-### mail 边界（收件箱制）
+### 跨仓协调（2026-11-24 · T3 Code 线程取代退役的 `mail/` 收件箱）
 
-**跨 agent 通信是"收件箱"制**（2026-10-15 用户点令）：① 一封信投进**收信方仓**的 `mail/`
-（不留在发信方自己仓）；② 每个 agent **只读自己仓的 `mail/`**，不读别仓的（那是别人的私人
-往来，即使那仓 public）；③ 本仓收件箱由 `.githooks/check-mail-boundary.py` 守 ——
-每封的 `**To:**` 必须指名本仓，一封 `To:` 别的仓的信 ⇒ 红。
-**为什么成文**：本仓曾越界 —— 去 `LLVM-wasm/mail/`、`OpenModelica-Full-Wasm/mail/` 找
-"写给我的信"，那两份其实是**内容仓发给它们**的。根因是**本仓当时没有 `mail/`** ⇒
-写给我的信无处可投、只能落回发信仓 ⇒ 逼我去翻别人目录。补上收件箱 = 摆正投递方向。
-**证据：** `.githooks/check-mail-boundary.py`、`mail/README.md`
+**跨仓通信原曾采用「收件箱」制**（2026-10-15 起在各仓设 `mail/` 並由 `.githooks/check-mail-boundary.py`
+守护，2026-11-24 随 Einfacht Trust v2 升级整体退役）。现役跨仓协作通过 T3 Code 会话线程完成，
+且不修改外部只读仓库。
+**证据：** `AGENTS.md`、`retractions.json`（R-019/R-020）、`HISTORY.md`
 
 ---
 

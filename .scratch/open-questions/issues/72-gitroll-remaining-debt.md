@@ -1,7 +1,9 @@
 # 72 · GitRoll 剩余技术债（issue #7 的未完成部分）
 
 **Status:** ready-for-agent
-**Settling:** `node build/113/var-audit.mjs`
+**Settling:** `node build/113/var-audit.mjs` —— rc=0 ⇒ zero var in authored JS/TS; readability debt stays tracked; rc≠0 ⇒ defect
+
+**Historical settling note:** `node build/113/var-audit.mjs`
 rc=0 ⇒ 本仓自写 JS/TS 里**零 `var`**（第三方/生成物按产地排除，排除清单必须能说出"谁产出它"）
 rc=1 ⇒ 还有 `var`（逐条点名，并区分"可证等价可自动改"与"必须人工写显式形态"）
 rc=2 ⇒ 读不到 TypeScript（判据工具缺失，**不降级成正则匹配**）

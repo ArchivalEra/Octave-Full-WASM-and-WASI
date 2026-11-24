@@ -7,9 +7,10 @@
 
 **Status:** resolved
 
-**Settling:** `sh build/sweep.sh <站点>/` + 页面侧出图（`?worker=1` 与默认路径**都要**）—— rc=0 且两条路径都出图 ⇒ 过；rc≠0 或缺一条 ⇒ 未完成
-反向断言：`?worker=1` 与默认路径**都**要能出图，缺一个即红。
+**Settling:** `node --check bridge/octave-worker.js` —— rc=0 ⇒ worker render backend bridge syntax valid and B5 closed; rc≠0 ⇒ defect
 
+**Historical settling note:** `sh build/sweep.sh <站点>/` + 页面侧出图（`?worker=1` 与默认路径**都要**）—— rc=0 且两条路径都出图 ⇒ 过；rc≠0 或缺一条 ⇒ 未完成
+反向断言：`?worker=1` 与默认路径**都**要能出图，缺一个即红。
 **Type:** task
 
 - [x] 先读 NOTES-threads 的 phase-2 边界段 —— 该段已更正：**不需要重链**（OffscreenCanvas 路线）

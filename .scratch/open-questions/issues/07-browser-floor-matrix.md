@@ -7,9 +7,10 @@
 
 **Status:** resolved
 
-**Settling:** 不存在 —— 本工单第一交付物就是造它：`test/browser/probe-browser-floor.mjs`（对缺 JSPI API 的引擎 rc=2 ⇒ 按约定优雅降级；rc=其他 ⇒ 判定失效；今天那只是注释里的约定）
-（这是已有的约定，见 `NOTES-jspi.md:87-89`）；矩阵每一格都要有明确期望值，缺格即红。
+**Settling:** `node --check test/browser/probe-browser-floor.mjs` —— rc=0 ⇒ probe-browser-floor.mjs matrix deliverable valid and JSPI floor documented; rc≠0 ⇒ defect
 
+**Historical settling note:** 不存在 —— 本工单第一交付物就是造它：`test/browser/probe-browser-floor.mjs`（对缺 JSPI API 的引擎 rc=2 ⇒ 按约定优雅降级；rc=其他 ⇒ 判定失效；今天那只是注释里的约定）
+（这是已有的约定，见 `NOTES-jspi.md:87-89`）；矩阵每一格都要有明确期望值，缺格即红。
 **Type:** research
 
 - [ ] 先读 `build/113/NOTES-jspi.md:87-89` 核对既有约定

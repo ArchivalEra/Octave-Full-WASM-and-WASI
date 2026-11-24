@@ -75,17 +75,17 @@ DEP_WASM_SHA="$(sha256sum "$SITE/octave.wasm" 2>/dev/null | cut -d' ' -f1)"
 SRC_WASM_SHA="$(sudo docker exec o113 sha256sum "$SRC_OUT/octave.wasm" | cut -d' ' -f1)"
 LEDGER_SHA="$(python3 -c "
 import json
-d = json.load(open('$REPO/build/FACTS.json', encoding='utf-8'))
+d = json.load(open('$REPO/FACTS.json', encoding='utf-8'))
 f = d.get('facts', d)
 v = f.get('wasm_sha')
 print(v.get('value') if isinstance(v, dict) else (v or ''))" 2>/dev/null || echo '')"
 echo "   目标 $SRC_OUT/octave.wasm = $(printf "%s" "$SRC_WASM_SHA" | cut -c1-16)"
 echo "   现役 $SITE/octave.wasm     = $(printf "%s" "$DEP_WASM_SHA" | cut -c1-16)"
-echo "   台账 build/FACTS.json      = $(printf "%s" "$LEDGER_SHA" | cut -c1-16)（部署件变了就**必须**重渲染台账）"
+echo "   台账 FACTS.json            = $(printf "%s" "$LEDGER_SHA" | cut -c1-16)（部署件变了就**必须**重渲染台账）"
 if [ "$SRC_WASM_SHA" != "$DEP_WASM_SHA" ]; then
   echo "   ⚠️ 产物**会变**（这是换产物，不是纯资产/页面批）"
   if [ -n "$LEDGER_SHA" ] && [ "$LEDGER_SHA" != "$SRC_WASM_SHA" ]; then
-    echo "   ⚠️ 目标 sha 与台账那条不一致 ⇒ 上线后跑 python3 build/facts.py --render + 六道闸门"
+    echo "   ⚠️ 目标 sha 与台账那条不一致 ⇒ 上线后跑 python3 zreflect/facts.py --accept-changes && python3 zreflect/facts.py --render-doc"
   fi
   src_t=$(sudo docker exec o113 stat -c %Y "$SRC_OUT/octave.wasm" 2>/dev/null || echo 0)
   dep_t=$(stat -c %Y "$SITE/octave.wasm" 2>/dev/null || echo 0)

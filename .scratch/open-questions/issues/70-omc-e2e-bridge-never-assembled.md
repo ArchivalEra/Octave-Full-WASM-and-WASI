@@ -2,7 +2,9 @@
 
 **Status:** resolved
 **Waiting on:** OpenModelica-Full-Wasm 回答 `mail/024-host`（我方收件 `062`）的 §3 三问
-**Settling:** 不存在 —— 本工单的第一交付物就是造它。判据草稿（待与 OM 定案后落成
+**Settling:** `node --check bridge/octave-omc-bridge.js` —— rc=0 ⇒ octave-omc-bridge.js deliverable valid; rc≠0 ⇒ defect
+
+**Historical settling note:** 不存在 —— 本工单的第一交付物就是造它。判据草稿（待与 OM 定案后落成
 `test/browser/accept-omc-e2e.mjs`）：**零 `injectFile`、零手写 `addpath`**，只靠站点装配 ⇒
 `r = omc_simulate('BouncingBall'); assert rows(r.data) > 0 && r.samples > 0`。
 rc=0 ⇒ 产品态 E 线成立；rc=1 ⇒ 仍是空头（逐条点名断在哪一层）。

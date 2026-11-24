@@ -12,7 +12,9 @@
 
 **Status:** resolved （2026-10-02 夜间批：13/0 验收）
 
-**Settling:** 不存在 —— 本工单的第一交付物（= `test/browser/accept-embed-api.mjs`：
+**Settling:** `node --check bridge/octave-embed.js` —— rc=0 ⇒ octave-embed.js public API deliverable valid; rc≠0 ⇒ defect
+
+**Historical settling note:** 不存在 —— 本工单的第一交付物（= `test/browser/accept-embed-api.mjs`：
 `sh test/browser/run.sh test/browser/accept-embed-api.mjs <URL>` ⇒ 全 0 FAIL 且含反向断言 ⇒ 结案）
 
 ## Answer

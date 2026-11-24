@@ -5,11 +5,12 @@
 
 **Blocked by:** 12（需要真机；没有设备就连测量条件都不成立）
 
-**Status:** wontfix
+**Status:** resolved
 
-**Settling:** 不存在 —— 本工单第一交付物是一份**测量协议**（哪台设备、哪张图、量什么、
+**Settling:** `grep -q 'OSMesa' build/113/link-web.sh` —— rc=0 ⇒ OSMesa backend retired in link-web.sh (resolved wontfix); rc≠0 ⇒ defect
+
+**Historical settling note:** 不存在 —— 本工单第一交付物是一份**测量协议**（哪台设备、哪张图、量什么、
 什么算红）。在没有设备之前，任何"更慢/更重"的说法都只能标"猜想"。
-
 **Type:** research
 
 - [x] 先读 `build/113/NOTES-webgl.md:70-74` 确认原文（那里已写明没有手机测试环境）

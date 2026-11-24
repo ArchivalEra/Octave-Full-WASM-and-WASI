@@ -11,14 +11,15 @@
 
 **Status:** resolved
 
-**Settling:** 让选档器**存在性感知**（"能力上最优 **且** 站点真有这一档"才选它），然后： —— rc=0 ⇒ 结算件成立、结论见该单 Answer；rc≠0 ⇒ 先修结算件（门没红＝没结案）。
+**Settling:** `node build/113/lane-pick-selftest.mjs` —— rc=0 ⇒ lane-pick-selftest.mjs passes existence-aware lane selection; rc≠0 ⇒ defect
+
+**Historical settling note:** 让选档器**存在性感知**（"能力上最优 **且** 站点真有这一档"才选它），然后： —— rc=0 ⇒ 结算件成立、结论见该单 Answer；rc≠0 ⇒ 先修结算件（门没红＝没结案）。
 - 把新 `lane.js` + 新 `octave-core.js` 同步到 8761/8768（用 `build/promote-pages.sh`）后，
   `SITE_DIR=<站点> PROBES=1 sh build/sweep.sh <URL> probe-lane` ⇒ 8761 上仍 **17 PASS / 0 FAIL**
   （带头选 `threads`、不带头落 `base`）—— **不许**选 `w64`（那档不在）；
 - 8848 上仍 **30 PASS / 0 FAIL**（四格全在时，能力优的 `w64` 照旧被选中）；
 - **反向断言**：把某站的 `threads/` 目录临时改名 ⇒ 选档器必须**退到 `base` 并把这件事喊出来**
   （console 一条清晰告警），而**不许**404；`base` 也缺 ⇒ 响亮失败（红线：base 是任何静态托管的底线）。
-
 **Type:** task
 
 ## 为什么这条值得修（而不是"把 lane.js 也一起 promote 就行"）

@@ -1,6 +1,6 @@
 # maintaince.md · 方向与地图
 
-本文件**只指明方向**。测出来的现状由**事实系统本身**承载（`build/FACTS.json` 台账 +
+本文件**只指明方向**。测出来的现状由**事实系统本身**承载（`FACTS.json` 台账 +
 `STATE.md` 末尾的机器块，每提交复跑证真）；硬规矩由 `AGENTS.md` 承载（每次会话自动载入）。
 本文件不抄数字、不抄流程 —— 抄了就会漂；工具自己会说话（闸门会明说未启用，改口会要求
 `--accept-changes`，测龄会打印在重测输出里），听它们比读本文件的任何细节都可靠。
@@ -16,14 +16,13 @@ GNU Octave 11.3.0 → WebAssembly 的**全量浏览器运行时**（纯客户端
 
 ## 地图（真值在哪里）
 
-- **现在是什么**（活状态）：`STATE.md` —— 正文只写现状、数字一律引用台账键；
-  末尾两个机器块（事实 `AUTO:FACTS` + 闸门名录 `AUTO:GATES`）由
-  `python3 zreflect/facts.py --render-doc STATE.md` 渲染，每提交重算。
-- **测出来的数字**（唯一产地）：`build/FACTS.json`（源）+ `STATE.md` 的 AUTO 块（渲染）。
-- **事实系统**：**机制** = `zreflect/`（vendored 上游 **Einfacht** 重构版：gate 平台 /
-  发现式名录 / 旋钮登记 / world 闸门 / 复跑 / 陈旧 / 悬案 / 三语 README）；
-  **本仓数据层** = `zreflect/measure_octave.py`（数据 vs 机制分离）；
-  旋钮的唯一可复现来源 = `reflect-hooks/Einfacht.env`；钩子挂 `reflect-hooks`。
+- **现在是什么**（活状态）：`STATE.md` —— 纯机器渲染（`AUTO:FACTS` + `AUTO:GATES`）；
+  历史叙事见 `HISTORY.md`，建筑原则见 `PRINCIPLES.md`。
+- **测出来的数字**（唯一产地）：`FACTS.json`（源）+ `STATE.md` 的 AUTO 块（渲染）。
+- **事实系统**：**机制** = `zreflect/`（Einfacht Trust v2：gate 平台 /
+  发现式名录 / 旋钮登记 / 复跑 / 陈旧 / 悬案 / 三语 README）；
+  **本仓数据层** = `reflect-local/measure_octave.py` 与 `reflect-local/principles.json`；
+  旋钮 = `knobs.json`；钩子由 `reflect-local/hook.py --chain` 链入 `.git/hooks/`。
 - **给 agent 的硬规矩**：`AGENTS.md`（路径铁律 / 三条不可违背 / 验收底线 / 批次收尾）。
 - **历史与事故**：`HISTORY.md`（append-only，`§5.x`）。
 - **悬案**：`.scratch/open-questions/issues/NN-*.md`（每条挂可执行结算件）。
@@ -145,10 +144,10 @@ rust_sort）。〔NEXT 线已删（2026-10-17）——它指向的 `next-base/si
 → 该线 bump pin（master = 无缝 lineage；IP = 缝随分支携带）→ provision → rebuild → 全量
 → 发运。IP 上新增的内核缝 = fork 上的独立提交，其他线**不继承**（各线 pin 各自的 fork 点）。
 
-## 开工与提交的顺序## 开工与提交的顺序
+## 开工与提交的顺序
 
-1. 开工前（要跑套件 / 基准）：`sudo -E $(which python3) build/lib/doctor.py` ——
+1. 开工前（要跑套件 / 基准）：`REFLECT_DOCTOR=build/doctor.json python3 zreflect/doctor.py` ——
    `DOWN: <哪条>` 就修环境，别带病开跑。
-2. 改完：`sh build/gates-selftest.sh` 全绿再提交（装了钩子则 pre-commit 自动做；
-   pre-push 复核机器块新鲜度）。**禁 `--no-verify`**。
+2. 改完：`python3 zreflect/registry.py --run commit`、`python3 zreflect/harness.py` 与
+   `sh build/gates-selftest.sh` 全绿再提交（pre-commit 自动串行执行）。**禁 `--no-verify`**。
 3. 推送后：持久盘镜像同步。**8761 只由受管辖入口改**（批次收尾细则 = `AGENTS.md`）。

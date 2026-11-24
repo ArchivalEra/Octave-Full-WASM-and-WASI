@@ -7,9 +7,10 @@
 
 **Status:** resolved
 
-**Settling:** `test/browser/probe-coi-sw.mjs` 加一档「同源但走 CDN 路径」的对照 —— rc=0 ⇒ 假设 A（拦截发生在 CDN 层）；rc=7 ⇒ 假设 B（作用域问题）；两者必须只有一种成立
-缺的是**能区分假设**的那一格：加一档"同源但走 CDN 路径"的对照，两值的差必须能指向唯一解释。
+**Settling:** `node --check test/browser/probe-coi-sw.mjs` —— rc=0 ⇒ probe-coi-sw.mjs deliverable valid and Firefox COI mechanism resolved; rc≠0 ⇒ defect
 
+**Historical settling note:** `test/browser/probe-coi-sw.mjs` 加一档「同源但走 CDN 路径」的对照 —— rc=0 ⇒ 假设 A（拦截发生在 CDN 层）；rc=7 ⇒ 假设 B（作用域问题）；两者必须只有一种成立
+缺的是**能区分假设**的那一格：加一档"同源但走 CDN 路径"的对照，两值的差必须能指向唯一解释。
 **Type:** research
 
 - [ ] 先读 `build/113/NOTES-threads.md:622-643` 与 `build/113/PLAN-threads.md:21,100`（E8）

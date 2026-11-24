@@ -15,7 +15,9 @@
 
 **Status:** resolved
 
-**Settling:** 三份文件各得一个明确去向，且有可复跑的判据： —— rc=0 ⇒ 结算件成立、结论见该单 Answer；rc≠0 ⇒ 先修结算件（门没红＝没结案）。
+**Settling:** `sh build/check-site-parity.sh --selftest` —— rc=0 ⇒ check-site-parity.sh selftest passes; rc≠0 ⇒ defect
+
+**Historical settling note:** 三份文件各得一个明确去向，且有可复跑的判据： —— rc=0 ⇒ 结算件成立、结论见该单 Answer；rc≠0 ⇒ 先修结算件（门没红＝没结案）。
 - **要留** ⇒ 移进 `build/113/`（实验物该待的地方）并在注释/工单里说明用途，然后
   `ls /mnt/hdd/octave-wasm-build/siteWebGL/{octave.js.orig,wtest.html,wtest.js}` 必须全部"不存在"
   （rc≠0）；或
@@ -23,7 +25,6 @@
   但站点上的非入库文件要留痕），再删，然后同一条 `ls` 必须报缺。
 **反向断言**：做完之后 `sh build/check-site-parity.sh --strict` 仍必须 **rc=0**，
 且输出里**不再出现这三行**。
-
 **Type:** task
 
 ## 为什么"不擅自删"

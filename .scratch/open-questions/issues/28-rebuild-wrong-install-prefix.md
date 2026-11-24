@@ -9,12 +9,13 @@
 
 **Status:** resolved
 
-**Settling:** `bash build/113/relink.sh rebuild threads --out <目录> --yes-rebuild`（修正后） —— rc=0 ⇒ 结算件成立、结论见该单 Answer；rc≠0 ⇒ 先修结算件（门没红＝没结案）。
+**Settling:** `bash build/113/relink.sh --selftest` —— rc=0 ⇒ relink.sh prefix selfcheck passes; rc≠0 ⇒ defect
+
+**Historical settling note:** `bash build/113/relink.sh rebuild threads --out <目录> --yes-rebuild`（修正后） —— rc=0 ⇒ 结算件成立、结论见该单 Answer；rc≠0 ⇒ 先修结算件（门没红＝没结案）。
 ⇒ 产物 `octave.js` 里 `grep -o '/src/work/octave-install[a-z0-9_-]*/share/octave/11.3.0' | sort -u`
 **必须只有 `…-threads` 一条**（不许出现裸的 `/src/work/octave-install/`）；
 且把该产物装进站点后 `sh build/sweep.sh <站点>/ accept-help` ⇒ **全绿**（当前是 5 PASS / 7 FAIL）。
 **反向断言**：故意用 product 前缀的产物 ⇒ `accept-help` 必须红（证明这条判据认得出错）。
-
 **Type:** task
 
 ## 实测（2026-09-30，做工单 27 第②步时发现）

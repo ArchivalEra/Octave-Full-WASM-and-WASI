@@ -11,10 +11,10 @@ The skills speak in terms of five canonical triage roles. This file maps those r
 | `needs-info`               | `needs-info`         | 等补充：结算件写不出来，得先问人或先量一次    |
 | `ready-for-agent`          | `ready-for-agent`    | 已完整规格化，AFK 的 agent 可以直接抓      |
 | `ready-for-human`          | `ready-for-human`    | 需要人做（真机手测、需要设备/凭据）        |
-| `wontfix`                  | `wontfix`            | 不做了（**要在文件底部 `## Comments` 写为什么**） |
+| `resolved`                 | `resolved`           | 已结案（附可执行 `Settling:` 与 `## Answer`；历史工单保留不删） |
 
-⚠️ 本仓的一条本地约定：`wontfix` 不是删除。被判定"不做"的悬案同样留在目录里，
-因为**"我们决定不查这个"本身是一条结论** —— 删掉它，下一个人会重新提出同一个问题。
-（同源规矩见 `AGENTS.md` 事实纪律第 4 条（推断与实测分开）与 `build/lib/retractions.json` 的用法。）
+⚠️ 本仓的一条本地约定：Trust v2 下 `check_questions.py` 只接受
+`ready-for-agent`、`ready-for-human`、`resolved` 三种状态；已决定不做或结案的悬案同样留在目录里、标记为 `resolved` 并写明原因，不删文件，以免后来者重复踩坑。
+（同源规矩见 `AGENTS.md` 事实纪律第 4 条（推断与实测分开）与 `retractions.json` 的用法。）
 
 When a skill mentions a role (e.g. "apply the AFK-ready triage label"), use the corresponding string from this table.

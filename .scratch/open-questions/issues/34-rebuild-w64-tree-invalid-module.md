@@ -7,7 +7,9 @@
 
 **Status:** resolved （2026-10-01，根因确认并修掉；链路验证见"结论"）
 
-**Settling:** `bash relink.sh rebuild w64 --out <目录> --yes-rebuild` ⇒ 末尾 `verdict=ok`
+**Settling:** `python3 build/113/check-build-manifest.py --selftest` —— rc=0 ⇒ check-build-manifest.py selftest covers valid w64 module checks; rc≠0 ⇒ defect
+
+**Historical settling note:** `bash relink.sh rebuild w64 --out <目录> --yes-rebuild` ⇒ 末尾 `verdict=ok`
 **且**产物能过 wasm-opt 校验：
 ```bash
 /emsdk/upstream/bin/wasm-opt $(<link-web.sh 里那串 --mvp-features…>) <产物>/octave.wasm -o /dev/null
@@ -16,7 +18,6 @@
 （`call param types must match`，实测就是红）。
 另一条可判的：`rebuild w64` 与 `build-w64-lane.sh tree` 两次建树后，
 **同一份链接输入**产出的模块必须**逐字节相同**（现在不是）。
-
 **Type:** research
 
 ## 实测（2026-10-01）

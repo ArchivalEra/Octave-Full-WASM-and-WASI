@@ -112,9 +112,9 @@ nur uebernommen, wenn beide bestehen. Erneut ausfuehren:
    MEMFS geschrieben werden.
 
 4. **Das Faktensystem.** Jede Aussage ueber den Build ist ein Ledger-Eintrag mit eigenem
-   Nachfahrbefehl. [`build/FACTS.json`](build/FACTS.json) haelt die Zahlen, `STATE.md` den
-   Live-Status, `HISTORY.md` die Append-only-Aufzeichnung, und 64 Gates (14 Plattform,
-   50 Repo-spezifisch) pruefen, ob Dokumente, Artefakte und Ledger uebereinstimmen.
+   Nachfahrbefehl. [`FACTS.json`](FACTS.json) haelt die Zahlen, `STATE.md` den rein
+   maschinell gerenderten Live-Status, `HISTORY.md` die Append-only-Aufzeichnung, und
+   `zreflect/` + `build/`-Gates pruefen, ob Dokumente, Artefakte und Ledger uebereinstimmen.
 
 Austauschbare Komponenten sind **Plugins mit Vertrag**, keine Build-Flags: Modustabellen-
 Schalter → deklariertes Label im Artefakt → Artefakt-Probe → Zweiweg-Gate → Ledger-Eintrag.
@@ -147,16 +147,16 @@ Den Interpreter in eine eigene Seite einbetten: [`docs/embed-api.md`](docs/embed
 | [`HISTORY.md`](HISTORY.md) | Append-only-Aufzeichnung pro Charge |
 | [`CONTEXT.md`](CONTEXT.md) | Glossar — eine massgebliche Definition pro Begriff |
 | [`AGENTS.md`](AGENTS.md) | Betriebsvertrag fuer Mitarbeitende in diesem Repo |
-| [`build/FACTS.json`](build/FACTS.json) | Ledger der gemessenen Zahlen; jeder Schluessel traegt seinen Nachfahrbefehl |
+| [`FACTS.json`](FACTS.json) | Ledger der gemessenen Zahlen; jeder Schluessel traegt seinen Nachfahrbefehl |
 | [`build/lanes.json`](build/lanes.json) | Einzige Quelle des Linienwissens |
 | [`build/CLIBS.md`](build/CLIBS.md) | Build-Rezepte der C-Bibliotheken |
 | `build/113/` | Build-Rezepte, Gates, Linien-Skripte, technische Notizen |
 | `bridge/` | Browser-Glue: Asset-Loader, Linienwaehler, Worker, Seiten-Host |
 | `test/browser/` | Browser-Abnahmesuiten |
-| `zreflect/` | Faktensystem: Gate-Registry, Knob-Registry, Ledger |
+| `zreflect/` | Versiegelte Einfacht Trust v2 Kern-Schicht (Registry, Knobs, Ledger) |
+| `reflect-local/` | Repo-Datenschicht (`measure_octave.py`), Prinzipien, Hook-Wrapper |
 | `upstream/` | Octave-Fork (Submodule) |
 | `shelf/` | Paket-Shelf (eigenes Repo, Submodule) |
-| `mail/` | Repo-uebergreifende Korrespondenz — der Eingang dieses Repos |
 
 ## Repo-Inhalt
 
@@ -165,23 +165,22 @@ Den Interpreter in eine eigene Seite einbetten: [`docs/embed-api.md`](docs/embed
 group                           files        bytes
 site/                             228     332.8 MB
 release/                           13     115.7 MB
-build/                            463       3.4 MB
+build/                            461       3.3 MB
+(root)                             19       1.1 MB
 test/                             158       1.1 MB
-zreflect/                          40     845.9 KB
-(root)                             13     807.1 KB
+zreflect/                          35     738.5 KB
 upstream-patches/                  20     435.1 KB
-.scratch/                          83     377.6 KB
+.scratch/                          83     390.4 KB
 bridge/                            20     303.5 KB
-mail/                              54     265.0 KB
 vendor/                            21     123.5 KB
-.githooks/                         15     106.2 KB
-docs/                              14      77.9 KB
-reflect-hooks/                      8      37.0 KB
+reflect-local/                      3      97.3 KB
+docs/                              14      77.4 KB
+.githooks/                          6      57.8 KB
+.github/                            5      23.9 KB
 dist/                               2      23.8 KB
-.github/                            4      18.6 KB
 upstream/                          18       4.1 KB
 .zcode/                             1       1.6 KB
-(total)                          1175     456.3 MB
+(total)                          1107     456.2 MB
 ```
 
 Dateiliste: `git ls-files` — dieser Block ist eine Zusammenfassung, damit das README lesbar bleibt.
@@ -190,18 +189,15 @@ Erneut ausfuehren: `python3 .githooks/update-readme.py --check`
 
 ## Hooks und Gates
 
-Die Gates liegen in `reflect-hooks/` und sind ueber `core.hooksPath` verdrahtet.
-`pre-commit` rechnet die Maschinenbloecke in dieser README und in `STATE.md` neu, faehrt
-dann die Faktensystem-Gates, die Repo-spezifischen Gates (Whitelist, Konsistenz,
-Falsifizierbarkeit, Readiness-Antimuster, Mail-Grenze) und beide Selbsttest-Baenke.
-`pre-push` verlangt zusaetzlich, dass alle drei READMEs im selben Push aktualisiert werden.
+Die Konfiguration liegt in `knobs.json`, und Hooks werden ueber `reflect-local/hook.py` in
+`.git/hooks/` eingehaengt. `pre-commit` aktualisiert die Maschinenbloecke und fuehrt alle
+Trust-v2- sowie Repo-spezifischen Gates aus; `pre-push` verlangt gemeinsame README-Pushes.
 
 Von Hand ausfuehren:
 
 ```sh
-. reflect-hooks/Einfacht.env
 python3 zreflect/registry.py --run commit              # alle Gates mit runs_at="commit"
-sh gates-selftest.sh && sh build/gates-selftest.sh     # beweisen, dass jedes Gate rot werden kann
+python3 zreflect/harness.py && sh build/gates-selftest.sh  # beweisen, dass jedes Gate rot werden kann
 ```
 
 Jedes Gate traegt `--selftest`. Ein Gate, dessen Fehlschlag nicht gezeigt werden kann, ist

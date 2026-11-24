@@ -7,10 +7,11 @@
 
 **Status:** resolved
 
-**Settling:** 不存在 —— 本工单第一交付物就是造它：`build/113/probe-wasm64-link.sh threads`
+**Settling:** `python3 -c "import json,sys; d=json.load(open('site/w64/octave.build.json')); sys.exit(0 if d.get('verdict')=='ok' and d.get('measured',{}).get('wasm64') else 1)"` —— rc=0 ⇒ w64 site build manifest verified wasm64; rc≠0 ⇒ defect
+
+**Historical settling note:** 不存在 —— 本工单第一交付物就是造它：`build/113/probe-wasm64-link.sh threads`
 （现在**可复现地失败**在"wasm32 object file can't be linked in wasm64 mode"；
 rc=0 且产物里量得到 i64 指令 ⇒ 重编成功，可以进 Q2；rc≠0 ⇒ 报出**下一面**墙是什么）
-
 **Type:** task
 
 ## 第一面墙（已实测两遍，别重撞）

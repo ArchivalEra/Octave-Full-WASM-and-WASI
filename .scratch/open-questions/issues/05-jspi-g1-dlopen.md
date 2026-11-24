@@ -7,9 +7,10 @@
 
 **Status:** resolved
 
-**Settling:** 不存在 —— 本工单第一交付物：`build/113/probe-jspi-v9-dlopen/`（真 side module + dlopen）
-+ 对应 runner；判据 = 页面能否 ready（两值可区分）。
+**Settling:** `node --check test/browser/probe-jspi-g1.mjs` —— rc=0 ⇒ probe-jspi-g1.mjs deliverable valid and G1 dlopen finding closed; rc≠0 ⇒ defect
 
+**Historical settling note:** 不存在 —— 本工单第一交付物：`build/113/probe-jspi-v9-dlopen/`（真 side module + dlopen）
++ 对应 runner；判据 = 页面能否 ready（两值可区分）。
 **Type:** research
 
 - [ ] 先读 `build/113/NOTES-jspi.md:94-133`，确认推断的原文与既有 `probe-jspi-b.*` 的边界

@@ -1,0 +1,56 @@
+{
+  "_why": [
+    "Declarative grep-level invariants for Trust v2 configuration and retired surfaces.",
+    "Replay: python3 zreflect/check_invariants.py"
+  ],
+  "checks": [
+    {
+      "path": "knobs.json",
+      "must_contain": [
+        "\"REFLECT_MEASURE_MODULE\": \"measure_octave\"",
+        "\"REFLECT_FACTS\": \"FACTS.json\"",
+        "\"REFLECT_QUESTIONS\": \".scratch/open-questions/issues\""
+      ],
+      "why": "Trust v2 knob carrier must bind Octave data layer, root ledger, and issue tracker directory."
+    },
+    {
+      "path": "AGENTS.md",
+      "must_not_contain": [
+        "reflect-hooks/",
+        "Einfacht.env",
+        "mail-read.py",
+        "build/FACTS.json",
+        "build/facts.py",
+        "build/lib/retractions.json"
+      ],
+      "why": "Retired Trust v1 paths must not reappear in live AGENTS.md instructions."
+    },
+    {
+      "path": "README.md",
+      "must_not_contain": [
+        "reflect-hooks/",
+        "Einfacht.env",
+        "build/FACTS.json"
+      ],
+      "why": "Retired paths must not reappear in README.md."
+    },
+    {
+      "path": "README.zh.md",
+      "must_not_contain": [
+        "reflect-hooks/",
+        "Einfacht.env",
+        "build/FACTS.json"
+      ],
+      "why": "Retired paths must not reappear in README.zh.md."
+    },
+    {
+      "path": "README.de.md",
+      "must_not_contain": [
+        "reflect-hooks/",
+        "Einfacht.env",
+        "build/FACTS.json"
+      ],
+      "why": "Retired paths must not reappear in README.de.md."
+    }
+  ]
+}

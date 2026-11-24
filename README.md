@@ -108,9 +108,9 @@ both pass. Re-run: `bash test/fixtures/rustsort-spike/run-spike.sh`.
    that must be visible to Octave has to be written into MEMFS first.
 
 4. **The fact system.** Every claim about the build is a ledger entry carrying its re-run
-   command. [`build/FACTS.json`](build/FACTS.json) holds the numbers, `STATE.md` the live
-   status, `HISTORY.md` the append-only record, and 64 gates (14 platform, 50
-   repository-specific) check that documents, artifacts and ledger agree.
+   command. [`FACTS.json`](FACTS.json) holds the numbers, `STATE.md` the rendered live
+   status, `HISTORY.md` the append-only record, and `zreflect/` + `build/` gates
+   check that documents, artifacts and ledger agree.
 
 Swappable components are plugins with a contract rather than build flags: mode-table knob →
 declared label in the artifact → artifact probe → two-way gate → ledger entry.
@@ -143,16 +143,16 @@ the interpreter in your own page: [`docs/embed-api.md`](docs/embed-api.md).
 | [`HISTORY.md`](HISTORY.md) | Append-only per-batch record |
 | [`CONTEXT.md`](CONTEXT.md) | Glossary — one authoritative definition per term |
 | [`AGENTS.md`](AGENTS.md) | Operating rules for agents working here |
-| [`build/FACTS.json`](build/FACTS.json) | Measured-numbers ledger; each key carries its re-run command |
+| [`FACTS.json`](FACTS.json) | Measured-numbers ledger; each key carries its re-run command |
 | [`build/lanes.json`](build/lanes.json) | Single source of lane knowledge |
 | [`build/CLIBS.md`](build/CLIBS.md) | C library build recipes |
 | `build/113/` | Build recipes, gates, lane scripts, engineering notes |
 | `bridge/` | Browser-side glue: asset loader, lane selector, worker, page host |
 | `test/browser/` | Browser acceptance suites |
-| `zreflect/` | Fact system: gate registry, knob registry, ledger |
+| `zreflect/` | Sealed Einfacht Trust v2 core (gate registry, knob registry, ledger) |
+| `reflect-local/` | Host data layer (`measure_octave.py`), principles, git hook wrapper |
 | `upstream/` | Octave fork (submodule) |
 | `shelf/` | Package shelf (separate repo, submodule) |
-| `mail/` | Cross-repo correspondence — this repository's inbox |
 
 ## Repository contents
 
@@ -161,23 +161,22 @@ the interpreter in your own page: [`docs/embed-api.md`](docs/embed-api.md).
 group                           files        bytes
 site/                             228     332.8 MB
 release/                           13     115.7 MB
-build/                            463       3.4 MB
+build/                            461       3.3 MB
+(root)                             19       1.1 MB
 test/                             158       1.1 MB
-zreflect/                          40     845.9 KB
-(root)                             13     807.1 KB
+zreflect/                          35     738.5 KB
 upstream-patches/                  20     435.1 KB
-.scratch/                          83     377.6 KB
+.scratch/                          83     390.4 KB
 bridge/                            20     303.5 KB
-mail/                              54     265.0 KB
 vendor/                            21     123.5 KB
-.githooks/                         15     106.2 KB
-docs/                              14      77.9 KB
-reflect-hooks/                      8      37.0 KB
+reflect-local/                      3      97.3 KB
+docs/                              14      77.4 KB
+.githooks/                          6      57.8 KB
+.github/                            5      23.9 KB
 dist/                               2      23.8 KB
-.github/                            4      18.6 KB
 upstream/                          18       4.1 KB
 .zcode/                             1       1.6 KB
-(total)                          1175     456.3 MB
+(total)                          1107     456.2 MB
 ```
 
 Per-file listing: `git ls-files` — this block is a summary so the README stays readable.
@@ -186,16 +185,13 @@ Re-run: `python3 .githooks/update-readme.py --check`
 
 ## Hooks and gates
 
-Gates live in `reflect-hooks/` and are wired through `core.hooksPath`. `pre-commit`
-re-renders the machine blocks in this README and in `STATE.md`, then runs the fact-system
-gates, the repository-specific gates (whitelist, consistency, falsifiability, readiness
-anti-patterns, mail boundary) and both self-test benches. `pre-push` additionally requires
-all three READMEs to be updated in the same push.
+Configuration lives in `knobs.json` and hooks are chained into `.git/hooks/` via
+`reflect-local/hook.py`. `pre-commit` refreshes machine blocks and runs Trust v2 commit
+gates plus repository-specific checks; `pre-push` requires all three READMEs to stay in sync.
 
 ```sh
-. reflect-hooks/Einfacht.env
 python3 zreflect/registry.py --run commit              # gates declaring runs_at="commit"
-sh gates-selftest.sh && sh build/gates-selftest.sh     # prove each gate can fail
+python3 zreflect/harness.py && sh build/gates-selftest.sh  # prove each gate can fail
 ```
 
 Every gate carries `--selftest`. A gate that cannot be shown to fail is not a gate.

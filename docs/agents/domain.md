@@ -60,11 +60,11 @@ If your output contradicts an existing ADR, surface it explicitly rather than si
 
 > _Contradicts ADR-0007 (event-sourced orders), but worth reopening because…_
 
-## 本仓的第三个来源：`build/lib/retractions.json`
+## 本仓的第三个来源：`retractions.json`
 
-`docs/adr/` 是"我们决定了 X"。`build/lib/retractions.json` 是**"我们曾经断言 X，它被推翻了"** ——
+`docs/adr/` 是"我们决定了 X"。`retractions.json` 是**"我们曾经断言 X，它被推翻了"** ——
 两者是不同的东西，别混。
 
-在提出任何针对本仓事实系统的改动前，**先读 `build/lib/retractions.json`**：
-里面每条都是"已经查清并且**被推翻**"的断言，`.githooks/check-retractions.py` 会在它重新出现时报错。
+在提出任何针对本仓事实系统的改动前，**先读 `retractions.json`**：
+里面每条都是"已经查清并且**被推翻**"的断言，`zreflect/check_retractions.py` 会在它重新出现时报错。
 `HISTORY.md` 是 append-only 的历史（**不在扫描范围内**，里面的原文保留是对的）。

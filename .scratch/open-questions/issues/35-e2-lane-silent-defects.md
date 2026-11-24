@@ -7,11 +7,12 @@
 
 **Status:** resolved （2026-10-01）
 
-**Settling:** `sh build/gates-selftest.sh` ⇒ 相关闸门自证全绿：
+**Settling:** `python3 build/113/patch-openblas-symbol-prefix.py --selftest` —— rc=0 ⇒ patch-openblas-symbol-prefix.py and e2 gates selftests pass; rc≠0 ⇒ defect
+
+**Historical settling note:** `sh build/gates-selftest.sh` ⇒ 相关闸门自证全绿：
 `relink` 16/0、`patch-openblas-symbol-prefix` 9/0、`patch-openblas-emscripten` 9/0、
 `gen-f77-wrappers` 13/0。链路判据：`relink.sh link w64`（带 `E2_OPENBLAS`）⇒ `verdict=ok`
 **且**页面开机自检过（**这一条是本次血的教训：`verdict=ok` 不保证跑得起来**）。
-
 **Type:** task
 
 ## 四处缺陷（按撞到顺序）

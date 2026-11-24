@@ -11,11 +11,12 @@
 
 **Status:** resolved
 
-**Settling:** `grep -c '22 个' build/113/relink.sh` ⇒ **0**（数字不再手抄）；
+**Settling:** `bash build/113/relink.sh --selftest` —— rc=0 ⇒ relink.sh selfcheck verifies mode env var coverage; rc≠0 ⇒ defect
+
+**Historical settling note:** `grep -c '22 个' build/113/relink.sh` ⇒ **0**（数字不再手抄）；
 且 `bash build/113/relink.sh explain product | head -3` 仍能正常打印（措辞改成引用台账键）。
 **反向断言**：新注释若写成"全部 N 个变量"，必须有一条可跑的取数方式
 （`python3 build/facts.py show env_vars`）写在旁边 —— 写不出取数方式的数字不许留在文件里。
-
 **Type:** task
 
 ## 为什么现在修（而不是"等有空"）

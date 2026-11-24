@@ -11,11 +11,11 @@
 > **"必须一致"的要配对账器**（`registry.problems()` 里四对）。平台模块也要声明自己
 > （`MODULE = module_meta(…)`）—— 本仓数据层 `zreflect/measure_octave.py` 已加。
 >
-> ★ **2026-10-09：已采纳完全重构后的 Einfacht**。**机制**在 `zreflect/`（vendored 上游：
-> gate 平台 / 发现式名录 / 旋钮登记 / world / 复跑 / 陈旧 / 悬案 / 三语 README），
-> **本仓数据层**在 `zreflect/measure_octave.py`（数据 vs 机制分离）。旋钮唯一可复现来源 =
-> `reflect-hooks/Einfacht.env`。旧路径 `.githooks/check-facts*.py` 等已退役（平台取代）。
-> `build/facts.py` 保留为**兼容壳**（转调 `zreflect/facts.py`）。
+> ★ **2026-11-24：已升级至 Einfacht Trust v2。** **机制**在 `zreflect/`（含 `ANCHORS.json`
+> 与 `SEAL.json` 密封校验），**本仓数据层**在 `reflect-local/measure_octave.py` 与
+> `reflect-local/principles.json`，旋钮统一收口于根 `knobs.json`；钩子由
+> `reflect-local/hook.py --chain` 接入 `.git/hooks/`。旧路径 `reflect-hooks/`、
+> `build/facts.py` 与 `mail/` 已退役。
 
 ---
 
@@ -23,9 +23,9 @@
 
 ### ① 你想写一个数字（比如"导出 734 个"）
 
-**别写数字，写键名。** 测出来的数字**只在一个地方生产**：`build/FACTS.json`，
+**别写数字，写键名。** 测出来的数字**只在一个地方生产**：`FACTS.json`，
 渲染进 `STATE.md` 的 `AUTO:FACTS` 块（机器块由 `zreflect/facts.py --render-doc` 维护）。
-正文引用它的写法是键名（例如 `build/FACTS.json` 的 `exported_functions`）。
+正文引用它的写法是键名（例如 `[[exported_functions]]`）。
 活状态文档里**手抄数字**会被闸门拦（`zreflect/check_facts.py` 的"裸数字"规则）。
 
 - 每条事实自带 **`cmd`（复跑命令）与 `source`（出处）** —— 那才是这条数字的证明。
@@ -52,7 +52,7 @@
 - **实测**：写进活状态（`HANDOFF.md`），旁边带复跑命令。
 - **推断**：写进 `build/113/NOTES-*.md`，**并注明哪个实验能结案它**。
   写不出结案实验的推断 = 猜想，**不许**留在活状态。
-- **被推翻**：登记进 `build/lib/retractions.json`（那里已有 10+ 条前车之鉴）。
+- **被推翻**：登记进 `retractions.json`（每条带可复跑 `evidence` 命令）。
   `zreflect/check_retractions.py` 会在它**重新出现**时报错。
 
 判据怎么写：**`—— rc=0 ⇒ 结论A；rc=7 ⇒ 结论B`** 这种**两种可区分结论**的形状。
@@ -70,14 +70,11 @@
 ## §2 提交前的固定动作（每批）
 
 ```bash
-python3 .githooks/update-readme.py        # 先刷新（**再** git add —— 顺序错了 pre-push 会判陈旧）
-python3 .githooks/update-handoff.py       # HANDOFF 的 AUTO:STATE 机器块
-python3 zreflect/facts.py --render-doc STATE.md   # 台账 → 事实块（改了数字就要刷）
-sh build/gates-selftest.sh                # ★ 每个闸门先证明自己"会红"
-python3 .githooks/check-handoff.py && python3 .githooks/check-consistency.py \
-  && python3 .githooks/check-wants.py && python3 .githooks/check-whitelist.py \
-  && python3 zreflect/check_retractions.py && python3 zreflect/check_facts.py
-git add -A && git commit …                # pre-commit 会把上面全部再跑一遍
+python3 .githooks/update-readme.py        # 刷新三语 README 机器块
+python3 zreflect/facts.py --render-doc    # 重渲染 STATE.md 与 PRINCIPLES.md
+python3 zreflect/registry.py --run commit # 执行全体 Trust v2 提交期闸门
+python3 zreflect/harness.py && sh build/gates-selftest.sh  # 证明每道闸门都会红
+git add -A && git commit …                # pre-commit 会自动复核以上链条
 ```
 
 **白名单坑**：新增文件必须同步 `!路径` 进 `.gitignore`（本仓默认拒绝一切），

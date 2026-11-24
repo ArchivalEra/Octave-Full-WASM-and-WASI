@@ -1,7 +1,9 @@
 # 74 · 三线合一：一条线出三种产物（可执行 spec）
 
 **Status:** resolved
-**Settling:** `bash build/113/check-one-line-three-products.sh`
+**Settling:** `bash build/113/check-one-line-three-products.sh` —— rc=0 ⇒ check-one-line-three-products.sh passes; rc≠0 ⇒ defect
+
+**Historical settling note:** `bash build/113/check-one-line-three-products.sh`
 （2026-11-08 归档裁决：**以现有成果结案，不照旧 spec 重做**。handoff §3 的评估成立 —— 实际
 成果（`product` / `w64-std` / `w64` 三模式 + `relink.sh` 模式表 + 结算件五断言）已**超越**本单
 2026-10-19 写的 spec（当时只验 2 组；11-01 用户点令修正后扩到 3 模式 / 5 断言）。

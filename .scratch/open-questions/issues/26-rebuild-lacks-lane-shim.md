@@ -9,12 +9,13 @@
 
 **Status:** resolved
 
-**Settling:** `bash build/113/relink.sh rebuild threads --out /tmp/rb-test --yes-rebuild` —— rc=0 ⇒ 结算件成立、结论见该单 Answer；rc≠0 ⇒ 先修结算件（门没红＝没结案）。
+**Settling:** `bash build/113/lane-shim.sh --selftest` —— rc=0 ⇒ lane-shim.sh selftest passes; rc≠0 ⇒ defect
+
+**Historical settling note:** `bash build/113/relink.sh rebuild threads --out /tmp/rb-test --yes-rebuild` —— rc=0 ⇒ 结算件成立、结论见该单 Answer；rc≠0 ⇒ 先修结算件（门没红＝没结案）。
 —— rc=0 且产物 `verdict=ok` ⇒ 修好；在 product 车道的树上直接跑它 ⇒ 必须**不再**报
 `shared-memory is disallowed`（当前实测就是这么报的）。
 **反向断言**：把影子目录改名后再跑 ⇒ 必须**点名 FATAL**（与 `link` 的处置一致），
 不许退化成"编到一半才报一个离根因很远的错"。
-
 **Type:** task
 
 ## 实测（2026-09-30）

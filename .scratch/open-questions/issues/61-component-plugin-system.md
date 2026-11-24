@@ -16,7 +16,9 @@ bash build/113/relink.sh link w64        # 模式表里声明了插件 ⇒ 补�
 
 **Status:** resolved （2026-10-04：契约 v1 定稿 —— build/113/NOTES-plugins.md（声明格式 + 施工流水线 + 现役插件清单 + 机制对照表）+ build/plugins.json（登记表：e2-openblas 追认、mimalloc、libm 负判决）+ build/113/plugin-check.py 闸门（R1 正向 / R2 反向 / R3 A-B 同旗标；自证 10/0，挂 pre-commit，进 gates-selftest 38 闸门）。libm 轴由工单 60 实测否决 —— **插件可达的部件空间就此封口：现役两插件（BLAS/分配器）即全部。**）
 
-**Settling:** 不存在 —— 本工单的第一交付物（契约设计稿 + `build/113/plugin-check.py` 闸门：
+**Settling:** `python3 build/113/plugin-check.py --selftest` —— rc=0 ⇒ plugin-check.py selftest passes; rc≠0 ⇒ defect
+
+**Historical settling note:** 不存在 —— 本工单的第一交付物（契约设计稿 + `build/113/plugin-check.py` 闸门：
 两条反向断言——"登记的插件 ⊆ 产物 `declared`"（插件开着但产物没它 = 红）与
 "A/B 两件产物 `declared` 必须相同"（工单 57 混淆变量的机制化）；带 `--selftest`，
 登记进 `build/gates-selftest.sh`）。

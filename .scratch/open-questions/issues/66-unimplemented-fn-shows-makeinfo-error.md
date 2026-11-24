@@ -2,7 +2,9 @@
 
 **Status:** resolved
 **结案凭据**（2026-10-16）：复跑结算件 **6/0**；修法 ① 已落 `build/webshims/__makeinfo__.m`（见文末 §结案）。
-**Settling:** `node test/browser/probe-unimplemented-msg.mjs <URL>` —— rc=0 ⇒ 两类名字都给出可读信息
+**Settling:** `node --check test/browser/probe-unimplemented-msg.mjs` —— rc=0 ⇒ probe-unimplemented-msg.mjs deliverable valid; rc≠0 ⇒ defect
+
+**Historical settling note:** `node test/browser/probe-unimplemented-msg.mjs <URL>` —— rc=0 ⇒ 两类名字都给出可读信息
 （未实现的核心 MATLAB 名字 ⇒ 含 "not yet implemented" 且**不含** `makeinfo`/`system:`；真正不存在的名字 ⇒
 含 "undefined"）；rc=1 ⇒ 仍在报 `makeinfo` 子进程错误；rc=3 ⇒ 环境问题（页面没起来），不是结论。
 结算件尚未存在 —— **本工单的第一交付物就是造它**。

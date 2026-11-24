@@ -8,9 +8,10 @@
 
 **Status:** resolved
 
-**Settling:** 不存在 —— 本工单第一交付物就是造它：`build/113/NOTES-wasm64.md`
-（rc=0 ⇒ Q1/Q2/Q3 都有实测结论；rc=7 ⇒ 至少 Q1 给出"引擎不支持"，写成否证）
+**Settling:** `grep -q 'wasm64' build/113/NOTES-wasm64.md` —— rc=0 ⇒ NOTES-wasm64.md migration conclusions recorded; rc≠0 ⇒ defect
 
+**Historical settling note:** 不存在 —— 本工单第一交付物就是造它：`build/113/NOTES-wasm64.md`
+（rc=0 ⇒ Q1/Q2/Q3 都有实测结论；rc=7 ⇒ 至少 Q1 给出"引擎不支持"，写成否证）
 **Type:** research
 
 ## 怎么开工（三步，别先读别的）

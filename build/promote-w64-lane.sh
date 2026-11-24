@@ -90,7 +90,7 @@ ctr_sha () {
 ledger () {   # ledger <键>  ⇒ 台账里的值（读不到 ⇒ 空）
   python3 - "$REPO" "$1" <<'PY'
 import json, os, sys
-d = json.load(open(os.path.join(sys.argv[1], "build", "FACTS.json"), encoding="utf-8"))
+d = json.load(open(os.path.join(sys.argv[1], "FACTS.json"), encoding="utf-8"))
 f = d.get("facts", d)
 v = f.get(sys.argv[2])
 print(v.get("value") if isinstance(v, dict) else (v if v is not None else ""))
@@ -206,7 +206,7 @@ PY
 verify_site () {  # <站点>  —— 只核不写
   local site="$1" rc=0 wb
   wb="$(ledger $LEDGER_BASE_KEY)"
-  [ -n "$wb" ] || die "台账读不到 $LEDGER_BASE_KEY（$REPO/build/FACTS.json）"
+  [ -n "$wb" ] || die "台账读不到 $LEDGER_BASE_KEY（$REPO/FACTS.json）"
   [ -d "$site" ] || die "站点目录不存在：$site"
   lane_guard "$site" "$wb" "" before || rc=1
   lane_check "$site" w64 "$(ledger $LEDGER_W64_KEY)" || rc=1

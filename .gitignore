@@ -18,37 +18,25 @@
 !AGENTS.md
 !CONTEXT.md
 !DEPLOY.md
-!doctor.json
-# ★ zreflect/lang/ 语言包**全量跟踪**（2026-11-13，用户点令）：Einfacht 是 CI 的
-#   一部分，语言包跟测试文件一样必须全量入库；此前只放行 3 个 doctor.json，
-#   其余 90 个是 gitignored 本地私货 ⇒ 干净 checkout 的 runner 缺件，
-#   平台自证（facts_cli/knobs/check_facts/换名用例）在 CI 上必红（五轮实测）。
-#   上游 Einfacht 仓 93 个语言包全量跟踪 —— 本仓对齐。432 KiB，无大件。
+!PRINCIPLES.md
+!FACTS.json
+!ANCHORS.json
+!knobs.json
+!invariants.json
+!retractions.json
+!ruff.toml
+!CODEOWNERS
+!build/doctor.json
+# ★ zreflect/lang/ 语言包**全量跟踪**（Trust v2 合并为 3 个单文件：en/zh/de.json）：
 !zreflect/lang/
-!zreflect/lang/*/
 !zreflect/lang/*.json
-!zreflect/lang/*/*.json
 !build/plugins.json
 !build/lanes.json
-!.githooks/check-state.py
-!.githooks/update-state.py
-!.githooks/state_facts.py
-!.githooks/gate.py
 !.githooks/check_readme_sync.py
-!.githooks/check-mail-boundary.py
-!mail/
-!mail/*.md
-# ★ mail/read/（已读归档区，2026-10-19 内容仓 mail/044 B1 补洞）：
-#   白名单只放 !mail/*.md 时已读区被全局 * 盖住 ⇒ 归档信盘上在、git 看不见
-#   （实测 27 封在盘 / 21 被跟踪，6 封不可见积压——check-whitelist 的盲区形状）。
-!mail/read/
-!mail/read/*.md
-# ★ mail/sent/（外发副本区，2026-11-10）：本仓照 content 仓同款规矩 —— 投递落点 =
-#   收信方 mail/，发件留痕进 mail/sent/（非收件箱；mail-read.py 不列它、不归档它；
-#   check-mail-boundary.py 只扫未读区与 read/，不扫 sent/）。白名单只放 read/ 时
-#   sent/ 里的副本会被全局 * 盖住 ⇒ 盘上在、git 看不见（同 read/ 当年的积压形状）。
-!mail/sent/
-!mail/sent/*.md
+!.githooks/check-consistency.py
+!build/
+!reflect-local/
+!reflect-local/*
 !README.zh.md
 !README.de.md
 !docs/charts/*
@@ -120,8 +108,6 @@
 !build/rebuild-pic-libs.sh
 !build/build_oct.sh
 !build/make-dist.sh
-!build/FACTS.json
-!build/facts.py
 !build/lib/*
 !build/gates-selftest.sh
 !build/sweep.sh
@@ -193,38 +179,18 @@
 !vendor/MANIFEST.md
 !vendor/forge/*
 !vendor/extra/*
-!.githooks/install.sh
-!.githooks/check-retractions.py
-!.githooks/check-facts.py
-!.githooks/pre-commit
-!.githooks/pre-push
 !.githooks/update-readme.py
 !.githooks/check-consistency.py
-!.githooks/handoff-context.py
 !.zcode/config.json
 !.githooks/check-whitelist.py
 !.githooks/check-wants.py
-!.githooks/check-facts-replay.py
 !.githooks/check-readiness-pattern.py
-!.githooks/check-instruments.py
 
-# ── Einfacht 事实系统（重构版采纳，2026-10-09）─────────────────────────────────
-# 机制层（vendored 上游 ArchivalEra/Einfacht）+ 本仓数据层。
+# ── Einfacht 事实系统（Trust v2）─────────────────────────────────────────────
+# 机制层（vendored 上游 ArchivalEra/Einfacht）+ 本仓 reflect-local/ 扩展。
 !zreflect/
 !zreflect/*
-!reflect-hooks/
-!reflect-hooks/*
-!gates-selftest.sh
-!doctor.json
-# ★ zreflect/lang/ 语言包**全量跟踪**（2026-11-13，用户点令）：Einfacht 是 CI 的
-#   一部分，语言包跟测试文件一样必须全量入库；此前只放行 3 个 doctor.json，
-#   其余 90 个是 gitignored 本地私货 ⇒ 干净 checkout 的 runner 缺件，
-#   平台自证（facts_cli/knobs/check_facts/换名用例）在 CI 上必红（五轮实测）。
-#   上游 Einfacht 仓 93 个语言包全量跟踪 —— 本仓对齐。432 KiB，无大件。
-!zreflect/lang/
-!zreflect/lang/*/
-!zreflect/lang/*.json
-!zreflect/lang/*/*.json
+!zreflect/*.json
 !build/webgraphics/*
 !build/webdoc/*
 !build/assets-meta.json

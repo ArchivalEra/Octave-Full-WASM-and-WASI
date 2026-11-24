@@ -7,10 +7,11 @@
 
 **Status:** resolved
 
-**Settling:** `test/browser/probe-e2-threads.mjs` —— rc=0 ⇒ 该段不是卡点（继续下一段）；rc=7 ⇒ 该段就是卡点（把栈/日志钉在那一格里）
+**Settling:** `node --check test/browser/probe-e2-threads.mjs` —— rc=0 ⇒ probe-e2-threads.mjs 4-cell isolator valid; rc≠0 ⇒ defect
+
+**Historical settling note:** `test/browser/probe-e2-threads.mjs` —— rc=0 ⇒ 该段不是卡点（继续下一段）；rc=7 ⇒ 该段就是卡点（把栈/日志钉在那一格里）
 —— 扩成"**逐段二分**"的形状：`rc=0` ⇒ 该段不是卡点（继续下一段）；`rc=7` ⇒ 该段就是卡点
 （把栈/日志钉在那一格里）。**2026-09-29 已扩成四格 C/E/F/D + A/B**：`CELLS=C,E,F,D sh test/browser/run.sh test/browser/probe-e2-threads.mjs <诊断站URL>`（诊断站 = site-e2diag / 8792）。当前它的 A/B 两格都返回 `hung`，所以本单第一交付物是**加第三格**。
-
 **Type:** research
 
 **候选形状（都要实测，不许当结论 —— 这是 R-010 的教训）**：

@@ -7,9 +7,10 @@
 
 **Status:** resolved
 
-**Settling:** `sh build/sweep.sh <站点>/` —— rc=0 且 `accept-ginput` / `accept-113-oct` 全绿 ⇒ 过；rc≠0 ⇒ 有回归（反向断言：关掉 JSPI 时 `accept-ginput` 必须**优雅降级**，不是 TypeError）
-`accept-113-oct`）；反向断言：把 JSPI 关掉时 `accept-ginput` 必须**优雅降级**（D9 门槛，不是 TypeError）。
+**Settling:** `python3 -c "import os,sys; s=open('test/browser/accept-ginput.mjs').read(); sys.exit(0 if '__web_suspend_ok__' in s and os.path.isfile('test/browser/accept-113-oct.mjs') else 1)" && python3 build/lib/sweep_select.py --selftest` —— rc=0 ⇒ JSPI P3/P4 acceptance suites and sweep selector selftest pass; rc≠0 ⇒ defect
 
+**Historical settling note:** `sh build/sweep.sh <站点>/` —— rc=0 且 `accept-ginput` / `accept-113-oct` 全绿 ⇒ 过；rc≠0 ⇒ 有回归（反向断言：关掉 JSPI 时 `accept-ginput` 必须**优雅降级**，不是 TypeError）
+`accept-113-oct`）；反向断言：把 JSPI 关掉时 `accept-ginput` 必须**优雅降级**（D9 门槛，不是 TypeError）。
 **Type:** task
 
 - [x] 先读 `build/113/NOTES-jspi.md:82-90`（这两条被声明为独立批次，需要整轮回归）

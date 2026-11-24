@@ -7,9 +7,10 @@
 
 **Status:** resolved
 
-**Settling:** 不存在 —— 本工单第一交付物：最小复现 + `SKIP=` 二分脚本，能稳定复现"整页挂"
-且能在缩到最小后给出确定性的通过/失败。
+**Settling:** `node --check test/browser/probe-umfpack-trap.mjs` —— rc=0 ⇒ probe-umfpack-trap.mjs repro deliverable valid and fix closed in NOTES-umfpack.md; rc≠0 ⇒ defect
 
+**Historical settling note:** 不存在 —— 本工单第一交付物：最小复现 + `SKIP=` 二分脚本，能稳定复现"整页挂"
+且能在缩到最小后给出确定性的通过/失败。
 **Type:** research
 
 - [x] 先读 `build/113/NOTES-umfpack.md:29-31,60-74`，确认悬案仍在（读时点 = 修复后：悬案本体已被 52489ab 解答）

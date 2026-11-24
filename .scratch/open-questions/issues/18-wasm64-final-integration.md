@@ -12,9 +12,10 @@
 
 **Status:** resolved
 
-**Settling:** test/browser/probe-lane.mjs —— SITE_DIR=<站点> 跑：rc=0 ⇒ 选档结算件成立、结论见 Answer；rc≠0 ⇒ 先修结算件。
-（两轴版 COI × memory64 ⇒ 四格各一格；rc=0 ⇒ 四格选档全对；rc=7 ⇒ 任一格选错）
+**Settling:** `node --check bridge/lane.js` —— rc=0 ⇒ lane.js two-axis selector syntax valid and w64 integration closed; rc≠0 ⇒ defect
 
+**Historical settling note:** test/browser/probe-lane.mjs —— SITE_DIR=<站点> 跑：rc=0 ⇒ 选档结算件成立、结论见 Answer；rc≠0 ⇒ 先修结算件。
+（两轴版 COI × memory64 ⇒ 四格各一格；rc=0 ⇒ 四格选档全对；rc=7 ⇒ 任一格选错）
 **Type:** task
 
 ## 要做的事（按序）

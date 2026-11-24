@@ -1,10 +1,10 @@
 # 三语 README 同批判据的 CI 正面兜底（工单 67，2026-10-26 入库）：
-# reflect-hooks/pre-push §④ 要求**每次推送三份 README（en/zh/de）同批更新**，缺一份拒推
+# reflect-local/hook.py push 要求每次推送三份 README（en/zh/de）同批更新，缺一份拒推
 # —— 但 pre-push 可被 `git push --no-verify` 跳过（git 原生出口拦不住）。
-# 本工作流跑**同一条判据**（zreflect/check_readme_sync.py --changed），语义照抄 pre-push：
+# 本工作流跑同一条判据（zreflect/check_readme_sync.py --changed），语义与 pre-push 对齐：
 #   · 判据按"推送集"（这批推送改了哪些文件）判，不区分内容 —— 只要没同时改三份 ⇒ 红；
 #   · 新分支 / 全仓第一推：`rev-list <sha> --not --remotes`（pre-push 同款口径）；
-#   · 名单可配：REFLECT_READMES（reflect-hooks/Einfacht.env）。
+#   · 名单可配：knobs.json 的 REFLECT_READMES。
 # ⚠️ 诚实边界：CI 只在 push 到 origin 时跑 —— 改写本地历史再强推的路径由 CI 报红
 #    （事后暴露），不是实时拦截；本地 pre-push 仍是第一道。
 name: readme-sync

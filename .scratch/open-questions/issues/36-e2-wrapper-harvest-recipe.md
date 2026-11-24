@@ -8,9 +8,10 @@
 
 **Status:** resolved （按配方重跑成功：开机 1.3 s、四格 33/0、matmul 6.6×）
 
-**Settling:** build/113/relink.sh —— 带 `E2_OPENBLAS` 重链：verdict=ok ⇒ 配方可复现；verdict≠ok ⇒ 配方仍缺件。
-**且** `sh build/check-boot.sh http://127.0.0.1:<实验站点>/` ⇒ 开机过（**这一条才是判据**）。
+**Settling:** `bash build/113/relink.sh --selftest` —— rc=0 ⇒ relink.sh selftest covers E2_OPENBLAS wrapper harvest; rc≠0 ⇒ defect
 
+**Historical settling note:** build/113/relink.sh —— 带 `E2_OPENBLAS` 重链：verdict=ok ⇒ 配方可复现；verdict≠ok ⇒ 配方仍缺件。
+**且** `sh build/check-boot.sh http://127.0.0.1:<实验站点>/` ⇒ 开机过（**这一条才是判据**）。
 **Type:** research
 
 ## 现象与根因（2026-10-01 实测）

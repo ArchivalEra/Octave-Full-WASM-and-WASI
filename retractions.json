@@ -1,0 +1,146 @@
+{
+ "_why": [
+  "Retraction ledger: each entry is an overturned assertion whose signature snippet may not reappear on living-state lines.",
+  "Replay: python3 zreflect/check_retractions.py (historied sections in HISTORY.md are exempt)."
+ ],
+ "retractions": [
+  {
+   "id": "R-001",
+   "text": "线程档在 Pages 上跑不起来",
+   "evidence": "python3 -c \"import sys;s=open('test/browser/probe-coi-sw.mjs').read();sys.exit(0 if 'coi-serviceworker' in s else 1)\"",
+   "fixed_in": "build/113/PLAN-arch.md (probe-coi-sw.mjs proves SW grants coi=true + SAB on Chromium/Firefox/WebKit)"
+  },
+  {
+   "id": "R-002",
+   "text": "重复符号 vs LAPACK",
+   "evidence": "grep -q 'blas-nof2c' build/113/NOTES-threads.md",
+   "fixed_in": "build/113/NOTES-threads.md (actual duplicate pair is -lrefblas vs blas-nof2c/librefblas.a)"
+  },
+  {
+   "id": "R-003",
+   "text": "换 Fortran 接口",
+   "evidence": "grep -q 'F_INTERFACE_G77' build/113/NOTES-threads.md",
+   "fixed_in": "build/113/NOTES-threads.md (root cause was f2c int vs OpenBLAS void return ABI)"
+  },
+  {
+   "id": "R-004",
+   "text": "17 个不产汇总行",
+   "evidence": "python3 build/lib/sweep_select.py --selftest",
+   "fixed_in": "build/113/PLAN-arch.md (build/lib/sweep_select.py --selftest classifies all formats)"
+  },
+  {
+   "id": "R-005",
+   "text": "漂移 7 处",
+   "evidence": "grep -q 'execute_interp' build/113/PLAN-arch.md",
+   "fixed_in": "build/113/PLAN-arch.md (exact line-by-line audit found 10 places)"
+  },
+  {
+   "id": "R-006",
+   "text": "OCTAVE_VER = 7.2.0",
+   "evidence": "grep -q 'OCTAVE_VER' .githooks/check-consistency.py",
+   "fixed_in": ".githooks/check-consistency.py (exempts 7.2 lane Makefile entry)"
+  },
+  {
+   "id": "R-007",
+   "text": "probe-fontname.mjs 13 项",
+   "evidence": "grep -q 'font' test/browser/probe-fontname.mjs",
+   "fixed_in": "HISTORY.md (re-verified probe-fontname.mjs is 19 PASS)"
+  },
+  {
+   "id": "R-008",
+   "text": "probe-core-names.mjs，19 项",
+   "evidence": "grep -q 'core' test/browser/probe-core-names.mjs",
+   "fixed_in": "HISTORY.md (re-verified probe-core-names.mjs is 23 PASS)"
+  },
+  {
+   "id": "R-009",
+   "text": "『`-pthread` 要求链上**每个对象**都声明 `atomics`』／『atomics 缺失 ⇒ 链接必被 wasm-ld 拒』",
+   "evidence": "python3 build/113/atomics_scan.py --selftest",
+   "fixed_in": "build/113/PLAN-threads.md & check-build-manifest.py (only TLS/atomics objects require atomics)"
+  },
+  {
+   "id": "R-010",
+   "text": "worker 唤醒/自旋等待",
+   "evidence": "grep -q 'openblas_set_num_threads' test/browser/probe-e2-threads.mjs",
+   "fixed_in": "build/113/NOTES-threads.md (setting 1 thread still hangs; stall is not spin-wait)"
+  },
+  {
+   "id": "R-011",
+   "text": "确认这面墙由 memory64 造成",
+   "evidence": "grep -q 'MEMORY64' build/113/NOTES-wasm64.md",
+   "fixed_in": "build/113/NOTES-wasm64.md (clean tree builds wasm64 glpk cleanly; dirty mtime caused issue)"
+  },
+  {
+   "id": "R-012",
+   "text": "判别已确认与 memory64 有关",
+   "evidence": "grep -q 'CCACHE_DISABLE' build/113/NOTES-wasm64.md",
+   "fixed_in": "build/113/NOTES-wasm64.md (same root cause as R-011)"
+  },
+  {
+   "id": "R-013",
+   "text": "w64 的收益是地址空间（>4 GiB）—— 部署形态里 64 位档能吃到比 wasm32 更大的堆",
+   "evidence": "grep -q 'MAXIMUM_MEMORY' build/113/relink.sh",
+   "fixed_in": ".scratch/open-questions/issues/31-w64-heap-cap-and-speed.md (until MAXIMUM_MEMORY=8GB added in relink.sh)"
+  },
+  {
+   "id": "R-014",
+   "text": "55 条 signature mismatch 的根因是 ccache 缓存污染",
+   "evidence": "grep -q 'F77_CHAR_ARG_LEN_TYPE' .scratch/open-questions/issues/62-full-rebuild-abi-divergence.md",
+   "fixed_in": ".scratch/open-questions/issues/62-full-rebuild-abi-divergence.md (root cause was f77-fcn.h ABI length type)"
+  },
+  {
+   "id": "R-015",
+   "text": "货架要加 `needs` 新轴",
+   "evidence": "python3 -c \"import glob,sys;sys.exit(1 if any('\\\"needs\\\"' in open(p,errors='replace').read() for p in glob.glob('build/*.py')) else 0)\"",
+   "fixed_in": "build/113/PLAN-matlab-gaps.md (capability layers use depends edges, never needs)"
+  },
+  {
+   "id": "R-016",
+   "text": "内容契约 = 端口（schema + 校验器）",
+   "evidence": "grep -q 'build/extra-content/' build/113/NOTES-extra-content-seam.md",
+   "fixed_in": "build/113/NOTES-extra-content-seam.md (port origin is host build/extra-content/)"
+  },
+  {
+   "id": "R-017",
+   "text": "reflect-hooks/",
+   "evidence": "python3 -c \"import os,sys;sys.exit(0 if os.path.isfile('reflect-local/hook.py') and not os.path.exists('reflect-hooks') else 1)\"",
+   "fixed_in": "reflect-local/hook.py (Trust v2 unified hook entry replaces reflect-hooks/)"
+  },
+  {
+   "id": "R-018",
+   "text": "Einfacht.env",
+   "evidence": "python3 -c \"import os,sys;sys.exit(0 if os.path.isfile('knobs.json') and not os.path.exists('reflect-hooks/Einfacht.env') else 1)\"",
+   "fixed_in": "knobs.json (Trust v2 unified knob carrier replaces Einfacht.env)"
+  },
+  {
+   "id": "R-019",
+   "text": "mail-read.py",
+   "evidence": "python3 -c \"import os,sys;sys.exit(0 if not os.path.exists('zreflect/mail-read.py') and not os.path.exists('mail') else 1)\"",
+   "fixed_in": "AGENTS.md (2026-11-24 mail/ inbox and mail-read.py retired in favor of T3 Code threads)"
+  },
+  {
+   "id": "R-020",
+   "text": "check-mail-boundary.py",
+   "evidence": "python3 -c \"import os,sys;sys.exit(0 if not os.path.exists('.githooks/check-mail-boundary.py') else 1)\"",
+   "fixed_in": "AGENTS.md & HISTORY.md (mail boundary hook retired with mail/)"
+  },
+  {
+   "id": "R-021",
+   "text": "build/FACTS.json",
+   "evidence": "python3 -c \"import os,sys;sys.exit(0 if os.path.isfile('FACTS.json') and not os.path.exists('build/FACTS.json') else 1)\"",
+   "fixed_in": "FACTS.json (Trust v2 stores ledger at repo root)"
+  },
+  {
+   "id": "R-022",
+   "text": "build/facts.py",
+   "evidence": "python3 -c \"import os,sys;sys.exit(0 if os.path.isfile('zreflect/facts.py') and not os.path.exists('build/facts.py') else 1)\"",
+   "fixed_in": "zreflect/facts.py (Trust v2 removed legacy build/facts.py wrapper)"
+  },
+  {
+   "id": "R-023",
+   "text": "build/lib/retractions.json",
+   "evidence": "python3 -c \"import os,sys;sys.exit(0 if os.path.isfile('retractions.json') and not os.path.exists('build/lib/retractions.json') else 1)\"",
+   "fixed_in": "retractions.json (Trust v2 stores retractions ledger at repo root)"
+  }
+ ]
+}

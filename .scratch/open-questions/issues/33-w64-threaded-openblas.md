@@ -9,7 +9,9 @@
 
 **Status:** resolved （构建+链接+运行期+竞速全部完成；**发运**是产品决定 —— 与工单 27 同一面）
 
-**Settling:** ②的判据（构建后）： —— rc=0 ⇒ 结算件成立、结论见该单 Answer；rc≠0 ⇒ 先修结算件（门没红＝没结案）。
+**Settling:** `sh build/promote-w64-lane.sh --selftest` —— rc=0 ⇒ promote-w64-lane.sh selftest verifies w64 OpenBLAS lane; rc≠0 ⇒ defect
+
+**Historical settling note:** ②的判据（构建后）： —— rc=0 ⇒ 结算件成立、结论见该单 Answer；rc≠0 ⇒ 先修结算件（门没红＝没结案）。
 1. `bash /src/bin/build-e2-lane.sh --lane w64 …` 产出的库**逐成员**是 wasm64（自证写进脚本）；
 2. `E2_OPENBLAS=<lib> bash relink.sh link w64 --out <目录>` ⇒ `verdict=ok`、烘死路径是 `-w64`；
 3. 站点侧：开机自检 + `probe-lane`（该档必须仍是 `w64`）+ **`bench-lanes.mjs w64`**：
@@ -17,7 +19,6 @@
    （OpenBLAS 的收益）× 1.2（i64 指针的代价）；
 4. **反向断言**：把同一份站点跑 `?lane=w64`（refblas 版）与 OpenBLAS 版对比，前者必须**明显慢**
    —— 否则说明"换库"没生效（本仓踩过"旗标赋了值却没人引用"）。
-
 **Type:** task
 
 ## 现状（2026-10-01 进度）

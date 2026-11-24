@@ -7,11 +7,12 @@
 
 **Status:** resolved
 
-**Settling:** `cp -a <产物> /tmp/vcopy && E2_OPENBLAS=… relink.sh verify threads --out /tmp/vcopy` —— rc=0 ⇒ 修好（副本能验）；rc≠0 且副本 verdict 变成 `rejected` ⇒ 未修（反向断言：坏副本必须仍红）
+**Settling:** `python3 build/113/check-build-manifest.py --selftest` —— rc=0 ⇒ check-build-manifest.py pairing selftest covers --out-dir copy; rc≠0 ⇒ defect
+
+**Historical settling note:** `cp -a <产物> /tmp/vcopy && E2_OPENBLAS=… relink.sh verify threads --out /tmp/vcopy` —— rc=0 ⇒ 修好（副本能验）；rc≠0 且副本 verdict 变成 `rejected` ⇒ 未修（反向断言：坏副本必须仍红）
 `cp -a /mnt/hdd/octave-wasm-build/e2-artifacts/single /tmp/vcopy && E2_OPENBLAS=/src/work/e2-openblas-lib-s bash build/113/relink.sh verify threads --out /tmp/vcopy`
 —— **rc=0 ⇒ 修好了**（副本能验）；rc≠0 且 `/tmp/vcopy/octave.build.json` 的 verdict 变成 `rejected` ⇒ 未修（当前的实测行为）。
 反向断言：验一个**真的坏**副本（例：改一个字节）必须仍然红。
-
 **Type:** task
 
 ## 根因（已定位，含行号）

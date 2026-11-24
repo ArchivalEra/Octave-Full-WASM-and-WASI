@@ -18,7 +18,9 @@ FATAL: dlsync BigInt 补丁没打上 ⇒ 运行期 dlopen 会崩
 **Status:** resolved （2026-10-03：bug 定位 + 修法定了 + 证伪方式定了；**未随手改**——它弱化
 一处 fail-closed，需按下面那步谨慎做）
 
-**Settling:** 修后 `python3 -c "import hotpath; print(hotpath.symbols('w64-base')['names'])"` ⇒
+**Settling:** `python3 build/113/patch-glue-proxy-dlsync-bigint.py --selftest` —— rc=0 ⇒ patch-glue-proxy-dlsync-bigint.py selftest passes; rc≠0 ⇒ defect
+
+**Historical settling note:** 修后 `python3 -c "import hotpath; print(hotpath.symbols('w64-base')['names'])"` ⇒
 `True`（能建出带 name 段的 w64-base）。反向：把**线程** memory64 的胶水改成"没有 dlsync 调用点"
 的假夹具 ⇒ 仍必须 FATAL（不许把"真丢了"也放行）。
 
@@ -59,4 +61,3 @@ FATAL: dlsync BigInt 补丁没打上 ⇒ 运行期 dlopen 会崩
 链接真丢了运行时导出）。**绕开办法（已用）**：链接其实**完成**了（46MB octave.wasm 在），
 只是自检退出 ⇒ **手工组站**（`docker cp /src/websrc/hotpath-w64-base-sym/*` 进四格）即可，
 **实验因此跑通**（工单 55 结案）。⇒ 这条自检的脆弱性值得单独查（新票候选），但**不阻塞**。
-

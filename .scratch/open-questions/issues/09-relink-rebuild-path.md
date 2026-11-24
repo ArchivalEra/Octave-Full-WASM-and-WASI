@@ -6,10 +6,11 @@
 
 **Status:** resolved
 
-**Settling:** `bash build/113/relink.sh rebuild product --out <新目录> --yes-rebuild` —— rc=0 且 `verdict=ok` ⇒ rebuild 路径还活着；rc≠0 ⇒ 该路径已腐烂（**这本身就是发现**）
+**Settling:** `bash build/113/relink.sh --selftest` —— rc=0 ⇒ relink.sh rebuild path selftest passes; rc≠0 ⇒ defect
+
+**Historical settling note:** `bash build/113/relink.sh rebuild product --out <新目录> --yes-rebuild` —— rc=0 且 `verdict=ok` ⇒ rebuild 路径还活着；rc≠0 ⇒ 该路径已腐烂（**这本身就是发现**）
 `verdict=="ok"` 且产物 sha 与不 rebuild 时一致/可解释；若它与 `link` 的产物**不一致**，
 那本身就是发现（说明 rebuild 路径已经腐烂）。
-
 **Type:** task
 
 **⚠️ 代价诚实**：这条要一整轮重配 + 数小时构建，所以它不该被顺手塞进别的批次 ——

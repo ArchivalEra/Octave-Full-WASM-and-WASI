@@ -10,7 +10,9 @@
 **Status:** resolved （2026-10-03：仪器建成 + 端到端实测 + 接进事实系统；首个答案
 `dgemm_kernel 89.1%`）
 
-**Settling:** `python3 build/113/hotpath.py --selftest` ⇒ 7 PASS / 0 fail；
+**Settling:** `python3 build/113/hotpath.py --selftest` —— rc=0 ⇒ hotpath.py selftest passes; rc≠0 ⇒ defect
+
+**Historical settling note:** `python3 build/113/hotpath.py --selftest` ⇒ 7 PASS / 0 fail；
 `python3 build/113/hotpath.py profile 'A=rand(1200); tic; for k=1:25, B=A*A; end' --lane w64`
 ⇒ 打印带名字的热点表；`python3 .githooks/check-facts-replay.py` ⇒ 含
 `✓ witness hotpath_instrument_ok：ok`。

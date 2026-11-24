@@ -9,7 +9,9 @@
 两张 issue 已提 [#1](https://github.com/ArchivalEra/Octave-Full-Wasm/issues/1) UI 开工包 /
 [#2](https://github.com/ArchivalEra/Octave-Full-Wasm/issues/2) 部署工单）
 
-**Settling:** test/browser/probe-embed-inventory.mjs —— HARNESS=<harness> 跑：rc=0 ⇒ 结算件成立、结论见 Answer；rc≠0 ⇒ 先修结算件。
+**Settling:** `node --check test/browser/probe-embed-inventory.mjs` —— rc=0 ⇒ probe-embed-inventory.mjs API surface probe valid; rc≠0 ⇒ defect
+
+**Historical settling note:** test/browser/probe-embed-inventory.mjs —— HARNESS=<harness> 跑：rc=0 ⇒ 结算件成立、结论见 Answer；rc≠0 ⇒ 先修结算件。
 test/browser/probe-embed-inventory.mjs <部署了 embed-demo 的站点>` ⇒ 14/14 PASS；同站
 `accept-embed-api` 13/0、`accept-embed-multi` 13/0。实验站 8865 留档可复跑。
 

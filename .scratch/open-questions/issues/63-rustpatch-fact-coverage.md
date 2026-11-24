@@ -7,7 +7,9 @@ grill 从"覆盖矩阵"开始。本单 = 把"人会怎么 grill"逐条事实化�
 
 **Status:** resolved
 
-**Settling:** `sh test/fixtures/rustfill-spike/run-spike.sh`（G2 差分门 + G2b 变异自证）—— rc=0 ⇒ 仪器合格且当轮候选判决成立；rc≠0 ⇒ 门没红，先修门。
+**Settling:** `python3 build/113/check-rust-toolchain.py --selftest` —— rc=0 ⇒ check-rust-toolchain.py selftest passes; rc≠0 ⇒ defect
+
+**Historical settling note:** `sh test/fixtures/rustfill-spike/run-spike.sh`（G2 差分门 + G2b 变异自证）—— rc=0 ⇒ 仪器合格且当轮候选判决成立；rc≠0 ⇒ 门没红，先修门。
 已建成：32 输入域逐位一致 + 31/31 变异被抓）——rc=0 ⇒ 仪器合格且当轮候选判决成立；
 G6 延迟断言仍缺（候选④前置）。
 

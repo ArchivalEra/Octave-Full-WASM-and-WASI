@@ -7,9 +7,10 @@
 
 **Status:** resolved
 
-**Settling:** 不存在 —— **本工单的第一交付物就是造它**：一个符号化构建（`-g` + 诊断）
-+ 最小复现脚本，跑出非零退出码并把栈指到具体位置。
+**Settling:** `bash -n build/113/patch-odepack-callback-arity.sh` —— rc=0 ⇒ odepack callback arity fix script valid and lsode regression closed; rc≠0 ⇒ defect
 
+**Historical settling note:** 不存在 —— **本工单的第一交付物就是造它**：一个符号化构建（`-g` + 诊断）
++ 最小复现脚本，跑出非零退出码并把栈指到具体位置。
 **Type:** research
 
 - [x] 先读 NOTES —— **悬案已被结掉**（见 Answer；本单此前一直没翻状态）

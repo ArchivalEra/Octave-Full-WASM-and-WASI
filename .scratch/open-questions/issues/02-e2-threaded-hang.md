@@ -9,11 +9,12 @@
 
 **Status:** resolved
 
-**Settling:** 新建 `test/browser/probe-e2-threads.mjs` 两格（裸 `.oct` 路径 / 先 `set_num_threads(1)`）—— rc=0 ⇒ 定位在「多线程唤醒」；rc=7 ⇒ 定位在「线程版代码路径本身」
+**Settling:** `node --check test/browser/probe-e2-threads.mjs` —— rc=0 ⇒ probe-e2-threads.mjs deliverable valid and conclusion recorded in NOTES-threads.md; rc≠0 ⇒ defect
+
+**Historical settling note:** 新建 `test/browser/probe-e2-threads.mjs` 两格（裸 `.oct` 路径 / 先 `set_num_threads(1)`）—— rc=0 ⇒ 定位在「多线程唤醒」；rc=7 ⇒ 定位在「线程版代码路径本身」
 自托管带头服务 + 每格独立超时 + 末行 `=== N PASS / M FAIL ===`）。
 两格：① 裸跑 dlopen 的 `.oct` 路径；② 同路径但先注入 `openblas_set_num_threads(1)`。
 `rc=0` ⇒ 定位在多线程唤醒；`rc=7` ⇒ 定位在线程版代码路径本身。
-
 **Type:** research
 
 **⚠️ 今天的硬事实（实测，决定了这张工单的第一步）**：三个产物（E2 线程版 / E2 单线程 / 现役车道）

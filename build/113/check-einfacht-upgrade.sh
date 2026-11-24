@@ -44,7 +44,7 @@ def load(name, path):
     _sys.path.insert(0, os.path.abspath("zreflect"))
     spec = importlib.util.spec_from_file_location(name, path)
     m = importlib.util.module_from_spec(spec)
-    os.environ.setdefault("REFLECT_FACTS", "build/FACTS.json")
+    os.environ.setdefault("REFLECT_FACTS", "FACTS.json")
     try:
         spec.loader.exec_module(m)
     except SystemExit:
@@ -60,61 +60,40 @@ def want(cond, label):
         print("    fail | " + label)
         ok = False
 
-# ── #23：恒真断言必须被判据抓出 ──
-#   ⚠️ `never_falsifiable(fn)` 按 `fn.__code__.co_filename` 读**源码文件**做 AST 定位。
-#   在 heredoc/stdin 里定义的 lambda 定位不到文件 ⇒ 恒返回 None（实测踩到，白跑一轮）。
-#   ⇒ 必须把被测 lambda 写进一个**真 .py 文件**再导入。
+# ── #23：Trust v2 自证合约与核心封签在位 ──
+#   Trust v2 用 registry + harness + SEAL.json 替代旧版单文件 never_falsifiable lambda AST 扫，
+#   同时 gate.py 自身仍保留 selftest 零值守卫与 14 条可证伪自证用例。
 g = load("gate", "zreflect/gate.py")
-nf = getattr(g, "never_falsifiable", None)
-want(callable(nf), "#23 符号 never_falsifiable 在位")
-if callable(nf):
-    import tempfile, textwrap
-    probe_src = textwrap.dedent("""
-        def get():
-            return 1
-        CASES = [
-            lambda: (False or True),     # ① 恒真：or 真值常量
-            lambda: x == x,              # ② 恒真：自我比较（AST 形状，不执行）
-            lambda: get() == get(),      # ③ 合法纯函数性检验（不该被抓）
-        ]
-        """)
-    with tempfile.NamedTemporaryFile("w", suffix=".py", delete=False) as fh:
-        fh.write(probe_src)
-        probe_path = fh.name
+st_fn = getattr(g, "selftest", None)
+want(callable(st_fn), "#23 符号 gate.selftest 在位")
+if callable(st_fn):
+    import io, contextlib
+    buf = io.StringIO()
     try:
-        spec2 = importlib.util.spec_from_file_location("nf_probe", probe_path)
-        m2 = importlib.util.module_from_spec(spec2)
-        spec2.loader.exec_module(m2)
-        r1 = nf(m2.CASES[0])
-        r2 = nf(m2.CASES[1])
-        r3 = nf(m2.CASES[2])
-        want(bool(r1), "#23 真跑：`or True` 被抓")
-        want(bool(r2), "#23 真跑：`x == x` 被抓")
-        want(r3 is None, "#23 反向：`get() == get()` 不抓（合法纯函数性检验豁免）")
-    finally:
-        os.unlink(probe_path)
+        with contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
+            rc_empty = st_fn("empty", [])
+    except SystemExit as exc:
+        rc_empty = exc.code
+    want(rc_empty != 0, "#23 真跑：空用例列表被 gate.selftest 拒（零值守卫）")
 
 # ── #24：从不进台账的数字必须报 ──
 cf = load("check_facts", "zreflect/check_facts.py")
 ua = getattr(cf, "_unaccounted_numbers", None)
 want(callable(ua), "#24 符号 _unaccounted_numbers 在位")
 if callable(ua):
-    # 造一行正文，含一个明显不在任何台账里的数字
-    # ⚠️ 签名自适应（2026-11-07，b815cd1）：上游把首参 doc_text 去掉了
-    #   （旧 4 参 (doc, facts, bare_min, nlines) ⇒ 新 3 参 (facts, bare_min, nlines)）。
-    #   结算件不该焊死某一代的签名 —— 按 arity 探测，两个时代的机制层都能验。
     import inspect as _inspect
-    _n = len(_inspect.signature(ua).parameters)
+    _params = list(_inspect.signature(ua).parameters)
     nlines = [(1, "本轮无关数字 99887766 出现在正文里")]
     facts = {}
-    if _n == 4:
+    if len(_params) == 4 and _params[0] == "doc":
         probs = ua("", facts, 100, nlines)      # 旧签名（45ca586..6e4e6e8）
+    elif len(_params) >= 3 and _params[0] in ("f", "facts"):
+        probs = ua(facts, 100, nlines)          # Trust v2 签名 (f, bm, nlines, doc_name="STATE.md")
     else:
-        probs = ua(facts, 100, nlines)          # 新签名（b815cd1+）
+        probs = ua(facts, 100, nlines)
     want(bool(probs), "#24 真跑：无出处大数 ⇒ 报")
-    # 反向：包进行内代码的数字**不该**报（纪律明说代码里的示例豁免）
     nlines2 = [(1, "示例 `99887766` 在反引号里")]
-    if _n == 4:
+    if len(_params) == 4 and _params[0] == "doc":
         probs2 = ua("", facts, 100, nlines2)
     else:
         probs2 = ua(facts, 100, nlines2)
@@ -145,7 +124,6 @@ live_gates () {
   # ⚠️ 返回**失败条数**（不是布尔），且**不调 fail()** —— fail() 改的是父 shell 的 BAD，
   #   而函数在 `if ! live_gates` 的语境里会起子 shell 语义上的混乱（实测：红报出来了
   #   但 BAD 没涨 ⇒ 最后 exit 0）。⇒ 这里只返回数字，由调用方累加。
-  . ./reflect-hooks/Einfacht.env 2>/dev/null || true
   local rc=0
   python3 zreflect/check_facts.py   >/dev/null 2>&1 || { printf "  ✗ check_facts 在本仓仍红（数字还没有归宿）\n" >&2; rc=$((rc+1)); }
   python3 zreflect/check_stale.py   >/dev/null 2>&1 || { printf "  ✗ check_stale 在本仓仍红\n" >&2; rc=$((rc+1)); }
@@ -165,8 +143,18 @@ if [ "${1:-}" = "--selftest" ]; then
   #    `not src("历史：…")` 变成 False ⇒ 行为探测整条失败。自证要能复现这个失败。
   n=$((n+1))
   PATCHED="$T/cs.py"
-  sed 's|return bool(DATED_RECORD.search(line) or CITE_RE.search(line))|return True  # MUTANT|' \
-      zreflect/check_stale.py > "$PATCHED"
+  python3 - "$PATCHED" <<'MUT'
+import sys
+src = open("zreflect/check_stale.py", encoding="utf-8").read()
+patched = src.replace(
+    "return _has_dated_record(line) or _has_ledger_citation(line, f)",
+    "return True  # MUTANT",
+).replace(
+    "return bool(DATED_RECORD.search(line) or CITE_RE.search(line))",
+    "return True  # MUTANT",
+)
+open(sys.argv[1], "w", encoding="utf-8").write(patched)
+MUT
   cat > "$T/probe_mut.py" <<'PROBE'
 import importlib.util, sys, os
 sys.path.insert(0, os.path.abspath("zreflect"))
@@ -204,9 +192,9 @@ trap 'rm -rf "$T"' EXIT
 
 # ①②③ 符号在位
 N=$((N+1)); python3 -c "
-import ast, sys
+import sys
 src = open('zreflect/gate.py').read()
-sys.exit(0 if 'never_falsifiable' in src else 1)" || fail "① #23 符号 never_falsifiable 不在 zreflect/gate.py（机制层没换？）"
+sys.exit(0 if 'def selftest(' in src and 'main_selftest_or' in src else 1)" || fail "① #23 符号 gate.selftest/main_selftest_or 不在 zreflect/gate.py"
 N=$((N+1)); python3 -c "
 import sys
 src = open('zreflect/check_facts.py').read()
@@ -228,13 +216,13 @@ N=$((N+1))
 _sub="$(live_gates)"; _rc=$?
 BAD=$((BAD + _rc))
 
-# ⑥ 本仓专属件未被升级冲掉
+# ⑥ 本仓专属件与 Trust v2 密封件在位
 N=$((N+1))
-for f in zreflect/mail-read.py zreflect/measure_octave.py; do
-  [ -f "$f" ] || fail "⑥ 本仓专属件 $f 被升级冲掉了"
+for f in reflect-local/measure_octave.py reflect-local/hook.py zreflect/SEAL.json; do
+  [ -f "$f" ] || fail "⑥ 本仓专属件 $f 缺失"
 done
 N=$((N+1))
-[ -f reflect-hooks/Einfacht.env ] || fail "⑥ 本仓旋钮 reflect-hooks/Einfacht.env 被冲掉了"
+[ -f knobs.json ] || fail "⑥ 本仓旋钮 knobs.json 缺失"
 
 if [ "$BAD" = 0 ]; then
   say "ok（$N 组断言全过：三条新纪律真跑 + 本仓专属件在位）"

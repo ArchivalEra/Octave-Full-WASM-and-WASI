@@ -7,9 +7,10 @@
 
 **Status:** resolved
 
-**Settling:** 并入现有套件后 `sh build/sweep.sh <站点>/` —— rc=0 ⇒ 4 条判据都在且能绿；rc≠0 ⇒ 要么缺判据、要么行为已坏
-反向断言必须有 —— 例：worker 崩溃时若不快速失败，断言必须红。
+**Settling:** `node --check bridge/octave-worker.js` —— rc=0 ⇒ worker bridge external-review readiness assertions present and valid; rc≠0 ⇒ defect
 
+**Historical settling note:** 并入现有套件后 `sh build/sweep.sh <站点>/` —— rc=0 ⇒ 4 条判据都在且能绿；rc≠0 ⇒ 要么缺判据、要么行为已坏
+反向断言必须有 —— 例：worker 崩溃时若不快速失败，断言必须红。
 **Type:** task
 
 - [x] 先读 `build/113/NOTES-threads.md:554-557`（原文是"尚未写判据"）核对这 4 条

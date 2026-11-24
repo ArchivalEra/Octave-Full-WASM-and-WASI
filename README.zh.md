@@ -97,8 +97,8 @@ Rust 排序内核有两道门：差分门按 22 个输入域逐位比对；变�
    Octave 看见的东西必须先写进 MEMFS。
 
 4. **事实系统**。每条关于构建的断言都是一个台账条目，自带复跑命令。
-   [`build/FACTS.json`](build/FACTS.json) 存数字，`STATE.md` 是活状态，`HISTORY.md` 是
-   append-only 记录，64 道闸门（14 平台 + 50 本仓专属）核对文档、产物与台账是否一致。
+   [`FACTS.json`](FACTS.json) 存数字，`STATE.md` 是纯机器渲染的活状态，`HISTORY.md` 是
+   append-only 记录，`zreflect/` 与 `build/` 闸门核对文档、产物与台账是否一致。
 
 可替换部件是**带契约的插件**而非构建旗标：模式表旋钮 → 产物里的声明标签 → 产物探针 →
 双向闸门 → 台账条目。
@@ -129,16 +129,16 @@ python3 build/serve-coi.py --dir /mnt/hdd/octave-wasm-build/site --port 8761
 | [`HISTORY.md`](HISTORY.md) | append-only 逐批记录 |
 | [`CONTEXT.md`](CONTEXT.md) | 术语表 —— 每个词一条权威定义 |
 | [`AGENTS.md`](AGENTS.md) | 在本仓工作者的操作契约 |
-| [`build/FACTS.json`](build/FACTS.json) | 实测数字台账；每个键自带复跑命令 |
+| [`FACTS.json`](FACTS.json) | 实测数字台账；每个键自带复跑命令 |
 | [`build/lanes.json`](build/lanes.json) | 车道知识的唯一产地 |
 | [`build/CLIBS.md`](build/CLIBS.md) | C 库构建配方 |
 | `build/113/` | 构建配方、闸门、车道脚本、工程笔记 |
 | `bridge/` | 浏览器侧胶水：资产加载器、选档器、worker、页面宿主 |
 | `test/browser/` | 浏览器验收套件 |
-| `zreflect/` | 事实系统：闸门登记表、旋钮登记表、台账 |
+| `zreflect/` | 已密封 Einfacht Trust v2 机制层（闸门/旋钮/台账） |
+| `reflect-local/` | 本仓数据层（`measure_octave.py`）、建筑原则、钩子封装 |
 | `upstream/` | Octave 分叉（submodule） |
 | `shelf/` | 包货架（独立仓，submodule） |
-| `mail/` | 跨仓通信 —— 本仓的收件箱 |
 
 ## 仓库内容
 
@@ -147,23 +147,22 @@ python3 build/serve-coi.py --dir /mnt/hdd/octave-wasm-build/site --port 8761
 group                           files        bytes
 site/                             228     332.8 MB
 release/                           13     115.7 MB
-build/                            463       3.4 MB
+build/                            461       3.3 MB
+(root)                             19       1.1 MB
 test/                             158       1.1 MB
-zreflect/                          40     845.9 KB
-(root)                             13     807.1 KB
+zreflect/                          35     738.5 KB
 upstream-patches/                  20     435.1 KB
-.scratch/                          83     377.6 KB
+.scratch/                          83     390.4 KB
 bridge/                            20     303.5 KB
-mail/                              54     265.0 KB
 vendor/                            21     123.5 KB
-.githooks/                         15     106.2 KB
-docs/                              14      77.9 KB
-reflect-hooks/                      8      37.0 KB
+reflect-local/                      3      97.3 KB
+docs/                              14      77.4 KB
+.githooks/                          6      57.8 KB
+.github/                            5      23.9 KB
 dist/                               2      23.8 KB
-.github/                            4      18.6 KB
 upstream/                          18       4.1 KB
 .zcode/                             1       1.6 KB
-(total)                          1175     456.3 MB
+(total)                          1107     456.2 MB
 ```
 
 逐文件清单：`git ls-files` —— 本块是摘要，README 因此保持可读。
@@ -172,17 +171,15 @@ upstream/                          18       4.1 KB
 
 ## 钩子与闸门
 
-闸门住在 `reflect-hooks/`，经 `core.hooksPath` 挂载。`pre-commit` 重算本 README 与
-`STATE.md` 的机器块，然后跑事实系统闸门、本仓专属闸门（白名单、一致性、可证伪性、
-就绪反模式、邮件边界）与两套自证台。`pre-push` 额外要求三份 README 在同一批推送里
-一起更新。
+旋钮统一收口于 `knobs.json`，钩子经 `reflect-local/hook.py --chain` 接入 `.git/hooks/`。
+`pre-commit` 重算机器块并运行 Trust v2 提交期闸门与本仓专属检查；`pre-push` 要求三份 README
+在同批推送中保持一致。
 
 手工复跑：
 
 ```sh
-. reflect-hooks/Einfacht.env
 python3 zreflect/registry.py --run commit              # 所有声明 runs_at="commit" 的闸门
-sh gates-selftest.sh && sh build/gates-selftest.sh     # 证明每道闸门都会红
+python3 zreflect/harness.py && sh build/gates-selftest.sh  # 证明每道闸门都会红
 ```
 
 每道闸门都带 `--selftest`。证不出会红的闸门不算闸门。

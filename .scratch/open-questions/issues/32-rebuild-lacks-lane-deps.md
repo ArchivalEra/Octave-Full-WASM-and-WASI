@@ -7,11 +7,12 @@ configure 第①步就死（`configure: error: linking to Fortran libraries from
 
 **Status:** resolved （2026-10-01，本批修掉，带自证）
 
-**Settling:** `bash build/113/relink.sh --selftest` ⇒ 13 PASS / 0 fail（新增的两条：
+**Settling:** `bash build/113/relink.sh --selftest` —— rc=0 ⇒ relink.sh --selftest passes lane DEPS check; rc≠0 ⇒ defect
+
+**Historical settling note:** `bash build/113/relink.sh --selftest` ⇒ 13 PASS / 0 fail（新增的两条：
 「rebuild w64 从模式表取车道依赖」+「`explain w64` 的 E2 钩子」）。
 反向断言：`rebuild w64` 在 `--yes-rebuild` 缺席时的输出里**必须**出现
 `DEPS=/usr/local-w64 … TARGET_HOST=wasm64-unknown-emscripten`（没有它就是这条又烂回去了）。
-
 **Type:** task
 
 ## 根因（实测）

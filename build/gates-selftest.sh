@@ -25,10 +25,8 @@ LIST="$(mktemp)"
 cat >"$LIST" <<'EOF'
 .githooks/check-whitelist.py --selftest
 .githooks/check-wants.py --selftest
-.githooks/check-state.py --selftest
 .githooks/check-consistency.py --selftest
 .githooks/check-readiness-pattern.py --selftest
-.githooks/check-mail-boundary.py --selftest
 build/check-site-parity.sh --selftest
 build/check_m.py --selftest
 build/serve-coi.py --selftest
@@ -68,7 +66,6 @@ build/113/patch-openblas-emscripten.py --selftest
 build/113/patch-glue-proxy-dlsync-bigint.py --selftest
 build/113/gen-f77-wrappers.py --selftest
 build/113/relink.sh --selftest
-build/facts.py --selftest
 build/lib/sweep_select.py --selftest
 build/113/lane-pick-selftest.mjs --selftest
 build/promote-pages.sh --selftest
@@ -118,9 +115,9 @@ rm -f "$LIST"
 
 echo "================================================================"
 # ★ 分工锁（issue #20 ① 的终局 = 方案 B，2026-10-18）：**两份自证台的交集必须为空**。
-#   为什么需要这条：本仓有两份台 —— 根 `gates-selftest.sh`（上游发现式：registry
-#   --all-runnable + --selftest-modules，覆盖 zreflect/ 平台闸门）与**本文件**（手写名单，
-#   覆盖平台无对应件的本仓专属闸门）。两份都跑（reflect-hooks/pre-commit:73,74）。
+#   为什么需要这条：本仓有两份台 —— `zreflect/harness.py`（上游发现式：registry
+#   --all-runnable，覆盖 zreflect/ 与 reflect-local/ 平台闸门）与**本文件**（手写名单，
+#   覆盖平台无对应件的本仓专属闸门）。两份都跑（pre-commit 串行调用）。
 #   上游建议方案 A（退役本文件、全部改 GATE 声明），**本仓判定 A 不成立**：
 #   46 条里 45 条在 build/ 与 .githooks/（不在 zreflect/ 发现面），且 12 个是 shell
 #   脚本（无法落 Python 的 GATE 声明）。⇒ 采用 B：**保留两份，但把分工锁死**。

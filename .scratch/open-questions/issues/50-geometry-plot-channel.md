@@ -10,7 +10,9 @@ OutputSink 缝同构）。本单 = 该方向的立项单与第一实验。
 **Status:** resolved （2026-10-03：**第一实验通过——几何通道可行已证**。本单范围（立项+第一实验）
 完成；完整契约定稿与 UI 渲染器对接属 E6 实施批次后续单）
 
-**Settling:** 不存在 —— 本工单第一交付物。形状：embed 形态下加载一个探针页，对
+**Settling:** `node --check test/browser/probe-figures-geometry.mjs` —— rc=0 ⇒ probe-figures-geometry.mjs deliverable valid; rc≠0 ⇒ defect
+
+**Historical settling note:** 不存在 —— 本工单第一交付物。形状：embed 形态下加载一个探针页，对
 `opengl_renderer` 注册"几何 sink"后端（与 GL toolkit 并列），跑 `plot(1:10); print` 级别的
 最小用例，验证能抽到折线顶点流（flat [x,y…] + 颜色/线宽数组）⇒ 抽到 = 通道可行（进入
 契约定稿）；抽不到（renderer 深度耦合 GL 上下文）= 如实记档，E6 回到"修 GL 边界"路线。
