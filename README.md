@@ -162,21 +162,21 @@ group                           files        bytes
 site/                             228     332.8 MB
 release/                           13     115.7 MB
 build/                            461       3.3 MB
-(root)                             19       1.1 MB
 test/                             158       1.1 MB
-zreflect/                          35     738.5 KB
+(root)                             19     963.2 KB
+zreflect/                          37     815.9 KB
 upstream-patches/                  20     435.1 KB
 .scratch/                          83     390.4 KB
 bridge/                            20     303.5 KB
 vendor/                            21     123.5 KB
-reflect-local/                      3      97.3 KB
+reflect-local/                      3      95.2 KB
 docs/                              14      77.4 KB
 .githooks/                          6      57.8 KB
 .github/                            5      23.9 KB
 dist/                               2      23.8 KB
 upstream/                          18       4.1 KB
 .zcode/                             1       1.6 KB
-(total)                          1107     456.2 MB
+(total)                          1109     456.1 MB
 ```
 
 Per-file listing: `git ls-files` — this block is a summary so the README stays readable.

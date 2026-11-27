@@ -44,7 +44,8 @@ def enforced_by(script):
 
 def _read_json_checked(path):
     try:
-        data = json.loads(open(path, encoding="utf-8").read())
+        with open(path, encoding="utf-8") as fh:
+            data = json.load(fh)
         return (data if isinstance(data, dict) else {}), None
     except (OSError, ValueError) as exc:
         return None, str(exc)
@@ -58,35 +59,45 @@ def _question_exec_problems(qdir):
     if not qdir or not os.path.isdir(qdir):
         return out
     for qp in sorted(glob.glob(os.path.join(qdir, "*.md")), key=check_questions.sort_key):
-        body = open(qp, encoding="utf-8", errors="replace").read()
+        with open(qp, encoding="utf-8", errors="replace") as fh:
+            body = fh.read()
         sv = check_questions.field(body, "Settling")
         if sv and not sv.strip().lower().startswith(check_questions.NONE_LIKE):
             out += gate.prose_in_exec_problems(os.path.basename(qp), "Settling", sv)
     return out
 
 
+def _spec_exec_problems(base, knob_key, name):
+    p = knobs.repo_path(knob_key, base)
+    if not (p and os.path.isfile(p)):
+        return []
+    data, err = _read_json_checked(p)
+    if err:
+        return [i18n.M("doc.corrupt_json", path=name, error=err)]
+    return gate.exec_position_problems(data, name)
+
+
+def _retractions_exec_problems(base):
+    ret = knobs.repo_path("REFLECT_RETRACTIONS", base)
+    if not (ret and os.path.isfile(ret)):
+        return []
+    rdata, rerr = _read_json_checked(ret)
+    if rerr:
+        return [i18n.M("doc.corrupt_json", path="retractions.json", error=rerr)]
+    out: list[i18n.Message] = []
+    for r in rdata.get("retractions") or []:
+        if isinstance(r, dict):
+            out += gate.prose_in_exec_problems("retractions/%s" % r.get("id", "?"),
+                                               "evidence", r.get("evidence"))
+    return out
+
+
 def all_exec_position_problems(root=None):
     """Collect prose-in-command errors across `world.json`, `pins.json`, `retractions.json`, `questions/*.md`."""
     base = root or gate.GATE_REPO
-    out = []
-    for knob_key, name in (("REFLECT_WORLD", "world.json"), ("REFLECT_PINS", "pins.json")):
-        p = knobs.repo_path(knob_key, base)
-        if p and os.path.isfile(p):
-            data, err = _read_json_checked(p)
-            if err:
-                out.append(i18n.M("doc.corrupt_json", path=name, error=err))
-            else:
-                out += gate.exec_position_problems(data, name)
-    ret = knobs.repo_path("REFLECT_RETRACTIONS", base)
-    if ret and os.path.isfile(ret):
-        rdata, rerr = _read_json_checked(ret)
-        if rerr:
-            out.append(i18n.M("doc.corrupt_json", path="retractions.json", error=rerr))
-        else:
-            for r in rdata.get("retractions") or []:
-                if isinstance(r, dict):
-                    out += gate.prose_in_exec_problems("retractions/%s" % r.get("id", "?"),
-                                                       "evidence", r.get("evidence"))
+    out = _spec_exec_problems(base, "REFLECT_WORLD", "world.json")
+    out += _spec_exec_problems(base, "REFLECT_PINS", "pins.json")
+    out += _retractions_exec_problems(base)
     return out + _question_exec_problems(knobs.questions_path(base))
 
 
@@ -232,7 +243,8 @@ def _load_local_rules(root=None):
     if not os.path.isfile(p):
         return (), [i18n.M("doc.corrupt_json", path=rel, error="not a file")]
     try:
-        data = json.loads(open(p, encoding="utf-8").read())
+        with open(p, encoding="utf-8") as fh:
+            data = json.load(fh)
     except (OSError, ValueError) as exc:
         return (), [i18n.M("doc.corrupt_json", path=rel, error=str(exc))]
     return parse_local_rules(data, rel=rel)
@@ -325,7 +337,8 @@ def _accepts_principles_ok():
     with tempfile.TemporaryDirectory() as root:
         if accepts_principles(root):
             return False
-        open(os.path.join(root, PRINCIPLES), "w", encoding="utf-8").write("# PRINCIPLES\n")
+        with open(os.path.join(root, PRINCIPLES), "w", encoding="utf-8") as fh:
+            fh.write("# PRINCIPLES\n")
         saved = os.environ.pop("REFLECT_NO_PRINCIPLES", None)
         try:
             if not accepts_principles(root):
@@ -363,8 +376,8 @@ def _local_rules_ok():
         return False
     with tempfile.TemporaryDirectory() as d:
         os.makedirs(os.path.join(d, "reflect-local"))
-        open(os.path.join(d, "reflect-local", LOCAL_PRINCIPLES_NAME), "w", encoding="utf-8").write(
-            json.dumps([{"id": "disk_arr", "text": "t", "cmd": "python3 -c 'pass'"}]))
+        with open(os.path.join(d, "reflect-local", LOCAL_PRINCIPLES_NAME), "w", encoding="utf-8") as fh:
+            fh.write(json.dumps([{"id": "disk_arr", "text": "t", "cmd": "python3 -c 'pass'"}]))
         disk_rows, disk_err = _load_local_rules(d)
         return not disk_err and len(disk_rows) == 1 and disk_rows[0].id == "disk_arr"
 

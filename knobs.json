@@ -7,7 +7,7 @@
   "REFLECT_LANG": "zh",
   "REFLECT_LANGS": "zh",
   "REFLECT_MEASURE_MODULE": "measure_octave",
-  "REFLECT_OFF_GATES": "check_ab.py,check_instruments.py,check_locks.py,check_pins.py,check_secrets.py,check_world.py,doctor.py",
+  "REFLECT_OFF_GATES": "check_ab.py,check_instruments.py,check_locks.py,check_pins.py,check_right.py,check_secrets.py,check_world.py,doctor.py",
   "REFLECT_QUESTIONS": ".scratch/open-questions/issues",
   "REFLECT_READMES": "README.md,README.zh.md,README.de.md",
   "REFLECT_REPLAY_TIMEOUT": "60",

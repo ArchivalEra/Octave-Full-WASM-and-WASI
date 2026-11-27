@@ -89,10 +89,10 @@ def field(text, name):
             continue
         val = [m.group(1).strip()]
         for nxt in lines[i + 1:]:
-            if re.match(r"^\s*(?:\*\*)?(?!https?:)[A-Za-z][A-Za-z0-9_-]*(?:\*\*)?\s*:", nxt):
-                break                    # next field starts
-            if nxt.strip():
-                val.append(nxt.strip())
+            if (not nxt.strip() or nxt.lstrip().startswith("#")
+                    or re.match(r"^\s*(?:\*\*)?(?!https?:)[A-Za-z][A-Za-z0-9_-]*(?:\*\*)?\s*:", nxt)):
+                break                    # blank line, heading, or next field stops continuation
+            val.append(nxt.strip())
         return " ".join(v for v in val if v) or None
     return None
 
@@ -241,12 +241,12 @@ def _split_and_chain(cmd):
     if len(parts) <= 1 or any(not p for p in parts):
         return [cmd]
     unsafe = ("cd ", "export ", "unset ")
-    if any(p.startswith(unsafe) or re.match(r"^[A-Za-z_][A-Za-z0-9_]*=", p) for p in parts):
+    if any(p.startswith(unsafe) or re.match(r"^[A-Za-z_]\w*=", p) for p in parts):
         return [cmd]
     return parts
 
 
-def _run_one_cached(sub, runner, cache, cache_lock):
+def _run_one_cached(sub, cache, cache_lock):
     if cache_lock is not None:
         with cache_lock:
             if sub in cache:
@@ -268,7 +268,7 @@ def _run_cached(cmd, runner, cache, cache_lock=None):
         return runner(cmd)
     last = (0, "")
     for sub in _split_and_chain(cmd):
-        last = _run_one_cached(sub, runner, cache, cache_lock)
+        last = _run_one_cached(sub, cache, cache_lock)
         if last[0] != 0:
             return last
     return last
@@ -342,9 +342,7 @@ def _resolved_targets_to_verify(_qdir, files, _all_resolved, depth=0):
     targets = {k for k, v in files.items() if status_of(v) == "resolved"}
     if depth <= 0:
         return targets
-    reentrant: tuple[str, ...] = ("check_questions.py", "registry.py --run", "harness.py")
-    if depth >= 2:
-        reentrant += ("check_retractions.py",)
+    reentrant = ("check_questions.py", "registry.py --run", "harness.py", "check_retractions.py")
     return {k for k in targets if not any(tok in _settling_cmd(field(files[k], "Settling") or "") for tok in reentrant)}
 
 
@@ -357,14 +355,14 @@ def sort_key(name):
 
 def collect(d=None, root=None):
     # The directory name is configurable via `knobs.questions_dir()`.
-    d = d or knobs.questions_dir()
+    d = d or knobs.get("REFLECT_QUESTIONS", root).strip().rstrip("/") or "questions"
     base = os.path.join(root or gate.GATE_REPO, d)
     files = {}
     if os.path.isdir(base):
         for f in sorted(os.listdir(base), key=sort_key):
             if f.endswith(".md"):
-                files["%s/%s" % (d, f)] = open(os.path.join(base, f), encoding="utf-8",
-                                               errors="replace").read()
+                with open(os.path.join(base, f), encoding="utf-8", errors="replace") as fh:
+                    files["%s/%s" % (d, f)] = fh.read()
     return files
 
 
@@ -381,7 +379,8 @@ def run(argv):
     import trust  # noqa: PLC0415
     targets = _resolved_targets_to_verify(qdir, files, all_res, depth=depth)
     probs = gate.with_run_cache(lambda: problems(files, verify_resolved=targets))
-    probs += trust.check_questions_against_anchor(files, qdir=qdir)
+    if not probs:
+        probs += trust.check_questions_against_anchor(files, qdir=qdir)
     n_open = sum(1 for t in files.values() if not is_resolved(t))
     return finish(M("questions.title"), probs,
                   M("questions.ok", count=len(files), open=n_open))
@@ -394,6 +393,8 @@ def _q(status="ready-for-agent",
 
 def _cases():
     ok = {"questions/01.md": _q()}
+    q3, q4, q5 = "questions/03.md", "questions/04.md", "questions/05.md"
+    prose_err = "criteria.exec_position_is_prose"
     return [
         ("questions.ok",
          lambda: problems(ok, exists=lambda p: True) == []),
@@ -405,7 +406,7 @@ def _cases():
              settling=_NOT_EXISTS + " -- the " + _FIRST_DELIVERABLE + " is to build it")},
              exists=lambda p: False) == []),
         ("questions.resolved_also_compliant", lambda: problems(
-            {"questions/03.md": _q(status="resolved")}, exists=lambda p: True,
+            {q3: _q(status="resolved")}, exists=lambda p: True,
             runner=lambda _c: (0, "ok")) == []),
         ("★ questions.resolved_cannot_be_none", lambda: [p.code for p in problems(
             {"questions/10.md": _q(status="resolved", settling=_NOT_EXISTS + " -- " + _FIRST_DELIVERABLE)},
@@ -417,10 +418,14 @@ def _cases():
             [p.code for p in problems({"questions/09.md": _q(status="wontfix")}, exists=lambda p: True)] == ["questions.bad_status"]
             and [p.code for p in problems({"questions/12.md": _q(status="needs-triage")}, exists=lambda p: True)] == ["questions.bad_status"]),
         ("★ questions.depth_one_still_verifies_non_self", lambda: (
-            "questions/03.md" in _resolved_targets_to_verify("questions", {"questions/03.md": _q(status="resolved")}, False, depth=1)
-            and "questions/04.md" not in _resolved_targets_to_verify(
+            q3 in _resolved_targets_to_verify("questions", {q3: _q(status="resolved")}, False, depth=1)
+            and q4 not in _resolved_targets_to_verify(
                 "questions",
-                {"questions/04.md": _q(status="resolved", settling="python3 zreflect/check_questions.py -- rc=0 => ok; rc=1 => bad")},
+                {q4: _q(status="resolved", settling="python3 zreflect/check_questions.py -- rc=0 => ok; rc=1 => bad")},
+                False, depth=1)
+            and q5 not in _resolved_targets_to_verify(
+                "questions",
+                {q5: _q(status="resolved", settling="python3 zreflect/check_retractions.py -- rc=0 => ok; rc=1 => bad")},
                 False, depth=1))),
         ("★ questions.closed_status_table", lambda:
             is_resolved(_q(status="resolved")) is True
@@ -428,21 +433,21 @@ def _cases():
             and is_resolved(_q(status="ready-for-agent")) is False),
         ("★ questions.missing_settling",
          lambda: [p.code for p in problems(
-             {"questions/04.md": _q(settling="")}, exists=lambda p: True)]
+             {q4: _q(settling="")}, exists=lambda p: True)]
          == ["questions.missing_settling"]),
         ("\u2605 questions.settler_missing",
          lambda: [p.code for p in problems(
              {"questions/08.md": _q(settling="zreflect/nope.py -- rc=0 => a; rc=2 => b")},
              exists=lambda p: False)]
-         == ["questions.settler_missing", "criteria.exec_position_is_prose"]),
+         == ["questions.settler_missing", prose_err]),
         ("\u2605 questions.settler_is_not_a_command",
          lambda: [p.code for p in problems(
              {"questions/09.md": _q(settling="zreflect/facts.py -- rc=0 => a; rc=2 => b")})]
-         == ["criteria.exec_position_is_prose"]),
+         == [prose_err]),
         ("\u2605 questions.no_distinct_outcomes",
          lambda: [p.code for p in problems(
-             {"questions/05.md": _q(settling="run it")}, exists=lambda p: True)]
-         == ["questions.no_distinct_outcomes", "criteria.exec_position_is_prose"]),
+             {q5: _q(settling="run it")}, exists=lambda p: True)]
+         == ["questions.no_distinct_outcomes", prose_err]),
         ("★ questions.bad_status",
          lambda: [p.code for p in problems(
              {"questions/06.md": _q(status="whatever")}, exists=lambda p: True)]
@@ -458,6 +463,14 @@ def _cases():
         ("questions.settling_wrapped",
          lambda: "rc=7" in (field("**Status:** x\n**Settling:** run:\nrc=0 => A；"
                                  "rc=7 => B\n", "Settling") or "")),
+        ("★ questions.field_stops_at_blank_or_heading",
+         lambda: field("**Status:** open\n**Settling:** python3 x\n\n## Conclusion\nprose\n", "Settling") == "python3 x"
+         and field("**Status:** open\n**Settling:** python3 x\n## Conclusion\nprose\n", "Settling") == "python3 x"
+         and field("  Status: spoof\n**Status:** ready-for-human\n", "Status") == "ready-for-human"
+         and not problems({"questions/14.md": _q(status="ready-for-human") + "**Parallel:** false\n"},
+                          exists=lambda p: True)
+         and [p.code for p in problems({"questions/15.md": _q() + "**Status:** ready-for-human\n"},
+                                       exists=lambda p: True)] == ["questions.duplicate_field"]),
         ("★ questions.empty",
          lambda: [p.code for p in problems({}, exists=lambda p: True)]
          == ["questions.empty"]),
