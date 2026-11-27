@@ -2,6 +2,8 @@
   "REFLECT_DOC": "STATE.md",
   "REFLECT_DOCS": "STATE.md,AGENTS.md,PRINCIPLES.md",
   "REFLECT_FACTS": "FACTS.json",
+  "REFLECT_HISTORY": "history",
+  "REFLECT_HISTORY_MODE": "folder",
   "REFLECT_HISTORY_SECS": "5,9,10",
   "REFLECT_INVARIANTS": "invariants.json",
   "REFLECT_LANG": "zh",

@@ -14,7 +14,10 @@
 !THIRD-PARTY-NOTICES.md
 !maintaince.md
 !STATE.md
-!HISTORY.md
+!history/
+!history/*
+!history/questions/
+!history/questions/*
 !AGENTS.md
 !CONTEXT.md
 !DEPLOY.md
