@@ -2,9 +2,8 @@
 
 Operating contract for agents working in this repository. It contains only
 behavioral rules, hard constraints, and path definitions. Explanations,
-incident narratives, and history live in `HISTORY.md`; current state lives in
-`STATE.md`; architectural rules live in `PRINCIPLES.md`; terminology lives in
-`CONTEXT.md`. If this file disagrees with a script's behavior, trust the script,
+incident narratives, and history live in `history/`; current state lives in
+`STATE.md`; architectural rules live in `PRINCIPLES.md`. If this file disagrees with a script's behavior, trust the script,
 then fix this file.
 
 ## Absolute rules
@@ -168,4 +167,4 @@ governance rules.
 - **Triage labels** on the `**Status:**` line: `ready-for-agent`,
   `ready-for-human`, `resolved` (`check_questions.py` rejects legacy statuses);
   resolved tickets are never deleted.
-- **Domain glossary**: `CONTEXT.md`; agent-facing docs live in `docs/agents/`.
+- **Agent docs**: agent-facing docs live in `docs/agents/`.
