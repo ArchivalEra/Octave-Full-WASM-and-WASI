@@ -175,10 +175,10 @@ docs/                              14      77.4 KB
 .scratch/                          10      45.4 KB
 .github/                            5      23.9 KB
 dist/                               2      23.8 KB
-questions/                          7      11.5 KB
+questions/                          8      13.2 KB
 upstream/                          18       4.1 KB
 .zcode/                             1       1.6 KB
-(total)                          1115     456.1 MB
+(total)                          1116     456.1 MB
 ```
 
 Per-file listing: `git ls-files` — this block is a summary so the README stays readable.
