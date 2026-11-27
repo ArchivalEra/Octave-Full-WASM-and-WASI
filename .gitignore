@@ -277,3 +277,14 @@
 
 # 工单 27：E2 车道重建驱动（含 idle-exit 补丁幂等接线）
 !build/113/build-e2-lane.sh
+
+# In-repo native & WASI build caches/outputs
+build/native/src/
+build/native/obj/
+build/native/out/
+build/wasi/src/
+build/wasi/obj/
+build/wasi/out/
+!build/native/README.md
+!build/wasi/README.md
+!test/core/README.md
