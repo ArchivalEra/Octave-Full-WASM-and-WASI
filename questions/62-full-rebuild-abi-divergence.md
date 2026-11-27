@@ -14,7 +14,7 @@ configure 与现役树**逐字节一致**（41b75ca6a2fd）、F77=emf77、F2C_PR
 `f77-fcn.h` 的 `F77_CHAR_ARG_LEN_TYPE` 未收编手改，已收编 fork `a5a7208`；
 equiv3 确认供给树 rebuild 可复现——1 条容忍 mismatch + wasm-opt 绿 + `verdict=ok`）
 
-**Settling:** `grep -q 'F77_CHAR_ARG_LEN_TYPE' .scratch/open-questions/issues/62-full-rebuild-abi-divergence.md` —— rc=0 ⇒ ABI divergence root cause recorded in ticket 62; rc≠0 ⇒ defect
+**Settling:** `grep -q 'F77_CHAR_ARG_LEN_TYPE' questions/62-full-rebuild-abi-divergence.md` —— rc=0 ⇒ ABI divergence root cause recorded in ticket 62; rc≠0 ⇒ defect
 
 **Historical settling note:** `CCACHE_DISABLE=1` + 干净供给树重跑 rebuild w64 —— mismatch ≤1 且 wasm-opt 过 ⇒ ccache 假说成立；mismatch >1 ⇒ 源码级手改未收编。
 `OCT=<供给树> OCT_TREE=<供给树> relink.sh rebuild w64`，读

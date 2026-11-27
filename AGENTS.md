@@ -157,10 +157,14 @@ governance rules.
 
 ## Agent workflow
 
-- **Tickets**: `.scratch/open-questions/issues/NN-*.md` (local tracker, not
+- **Tickets**: `questions/NN-*.md` (local tracker, not
   GitHub Issues). An open ticket must carry a `**Settling:**` line naming the
   future command or `不存在 —— ...` deliverable; resolved tickets must carry a
   runnable `**Settling:**` command returning exit code zero.
+- **Trust v2 approvals**: Creating/modifying tickets (`question.create`),
+  `knobs.json`, or `reflect-local/*.py` requires submitting an approval request
+  via `python3 zreflect/trust.py --submit` and obtaining the out-of-band
+  Ed25519 receipt at `http://127.0.0.1:18443` before committing.
 - **Triage labels** on the `**Status:**` line: `ready-for-agent`,
   `ready-for-human`, `resolved` (`check_questions.py` rejects legacy statuses);
   resolved tickets are never deleted.

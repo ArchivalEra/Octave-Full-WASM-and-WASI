@@ -9,7 +9,7 @@
       "must_contain": [
         "\"REFLECT_MEASURE_MODULE\": \"measure_octave\"",
         "\"REFLECT_FACTS\": \"FACTS.json\"",
-        "\"REFLECT_QUESTIONS\": \".scratch/open-questions/issues\""
+        "\"REFLECT_QUESTIONS\": \"questions\""
       ],
       "why": "Trust v2 knob carrier must bind Octave data layer, root ledger, and issue tracker directory."
     },

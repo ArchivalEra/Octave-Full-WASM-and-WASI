@@ -85,8 +85,8 @@
   {
    "id": "R-014",
    "text": "55 条 signature mismatch 的根因是 ccache 缓存污染",
-   "evidence": "grep -q 'F77_CHAR_ARG_LEN_TYPE' .scratch/open-questions/issues/62-full-rebuild-abi-divergence.md",
-   "fixed_in": ".scratch/open-questions/issues/62-full-rebuild-abi-divergence.md (root cause was f77-fcn.h ABI length type)"
+   "evidence": "grep -q 'F77_CHAR_ARG_LEN_TYPE' questions/62-full-rebuild-abi-divergence.md",
+   "fixed_in": "questions/62-full-rebuild-abi-divergence.md (root cause was f77-fcn.h ABI length type)"
   },
   {
    "id": "R-015",

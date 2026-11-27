@@ -207,7 +207,8 @@
 # `.scratch/open-questions/`：**悬案台账** —— 承重目录，不是草稿。
 #   其余 `.scratch/` 分支仍被开头的 `*` 拒掉 —— 只放行这一个 subtree。
 !docs/agents/*
-!.scratch/open-questions/issues/*
+!questions/
+!questions/*
 
 # wayfinder 图「w64 极限性能」（2026-10-02）：map + 票（承重，同悬案台账）
 !.scratch/perf-max/map.md
