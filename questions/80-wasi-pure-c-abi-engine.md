@@ -17,3 +17,9 @@
    - 不走 `drawnow`/GL/DOM `<canvas>` 注入；统一导出结构化几何数据（`xlim`、`ylim`、`title`、`line`/`text` 对象树）或纯像素帧。
 4. **单线程 `wasm32` / 纯 C-ABI 基线（不依赖 Rust）**
    - 不依赖 `memory64 + pthreads + SharedArrayBuffer`，面向移动端（尤其 iOS）与非浏览器沙盒提供单线程可运行基线。
+
+## 一期收敛决策（2026-11-27）
+
+- **目标**：不做 C-ABI 多端原生分发，统一走单线程 `wasm32-wasip1`。
+- **一期裁剪**：砍掉 `dlopen` 与 `pthread`（全静态链接，单线程运行）。
+- **一期暴露面**：仅暴露 `eval` / `eval_json` / `stdout` / `interrupt` 与标准 WASI 目录挂载（preopened dirs）。

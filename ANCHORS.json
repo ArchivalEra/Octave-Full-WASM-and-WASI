@@ -62,12 +62,18 @@
       "settling": "不存在 —— 本工单第一交付物：清理自研 JS 中的剩余 `var`（42）、逗号运算符（38）、`for-of`（37）与可选链（229）",
       "sha256": "df7cb8f25b400c719ae4db4606853df890e27e413321881fbee3dbcce4ddba03",
       "status": "ready-for-agent"
+    },
+    "questions/80-wasi-pure-c-abi-engine.md": {
+      "body_sha256": "9806a9878b83eea5ea7d61e685fbb91fff48c8d1d02f85757588fb09bc1c2ec5",
+      "settling": "不存在 —— 本工单第一交付物：产出一份脱离浏览器 DOM 与 Emscripten JS 胶水的单线程 `wasm32` WASI `.wasm` / 纯 C-ABI 静态库产物，并通过纯 C 宿主最小嵌入自证（`init`/`eval`/`eval_json`/`on_stdout`/`interrupt`/VFS/几何导出）",
+      "sha256": "0b14535031e670935bb3c4f0f08b28d5989d96e54e59c62910c9e2fce5af46d0",
+      "status": "ready-for-agent"
     }
   },
   "questions_dir": "questions",
   "repo": "ArchivalEra/Octave-Full-Wasm",
   "revoked_ids": [],
   "schema": 2,
-  "suite_seq": 14,
-  "suite_tree_sha256": "e13e8a18c31a82678e788863b7fde338ec0a179301e3adb4ac4af61381996895"
+  "suite_seq": 15,
+  "suite_tree_sha256": "bce3d33271407c701d2e40066479ec1c3c8967f4202316de7a45f813063555b9"
 }

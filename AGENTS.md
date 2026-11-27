@@ -39,7 +39,7 @@ then fix this file.
    # push recipe for this repo (proxy is mandatory; direct SSH/HTTPS ports time out)
    export https_proxy=http://127.0.0.1:2080 http_proxy=http://127.0.0.1:2080
    python3 zreflect/registry.py --run commit     # gates must be green first
-   git push ssh://git@github-ArchivalEra/ArchivalEra/Octave-Full-Wasm.git master
+   git push ssh://git@github-ArchivalEra/ArchivalEra/Octave-Full-WASM-and-WASI.git master
    ```
 
 ## Paths
