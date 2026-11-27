@@ -163,7 +163,7 @@ site/                             228     332.8 MB
 release/                           13     115.7 MB
 build/                            461       3.3 MB
 test/                             158       1.1 MB
-(root)                             19     963.2 KB
+(root)                             20     963.8 KB
 zreflect/                          37     815.9 KB
 upstream-patches/                  20     435.1 KB
 .scratch/                          83     390.4 KB
@@ -176,7 +176,7 @@ docs/                              14      77.4 KB
 dist/                               2      23.8 KB
 upstream/                          18       4.1 KB
 .zcode/                             1       1.6 KB
-(total)                          1109     456.1 MB
+(total)                          1110     456.1 MB
 ```
 
 Per-file listing: `git ls-files` — this block is a summary so the README stays readable.

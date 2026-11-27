@@ -1,0 +1,27 @@
+{
+  "schema": 2,
+  "license": "AGPL-3.0-or-later",
+  "declarations": [
+    {
+      "path": "LICENSE",
+      "format": "text",
+      "contains": ["GNU AFFERO GENERAL PUBLIC LICENSE", "Version 3"]
+    },
+    {
+      "path": "THIRD-PARTY-NOTICES.md",
+      "format": "text",
+      "contains": ["AGPL-3.0-or-later", "GNU Octave", "rwl/octave-wasm", "FFTW", "libsndfile", "SuiteSparse"]
+    },
+    {
+      "path": "vendor/MANIFEST.md",
+      "format": "text",
+      "contains": ["GPL-3.0-or-later", "gnu-octave/statistics"]
+    },
+    {
+      "path": "docs/RUST-SORT-KERNEL-LICENSE.md",
+      "format": "text",
+      "contains": ["AGPL-3.0-or-later"]
+    }
+  ],
+  "copies": []
+}

@@ -24,6 +24,7 @@
 !knobs.json
 !invariants.json
 !retractions.json
+!right.json
 !ruff.toml
 !CODEOWNERS
 !build/doctor.json
